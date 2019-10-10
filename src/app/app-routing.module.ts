@@ -5,14 +5,30 @@ import { ActivityComponent } from './activity/activity.component';
 import { AllExpensesComponent } from './all-expenses/all-expenses.component';
 import { GroupsComponent } from './groups/groups.component';
 import { FriendsComponent } from './friends/friends.component';
+import { ExpensesComponent } from './expenses/expenses.component';
+import { ActivitiesResolver } from './resolvers/activities-resolver.service';
+import { ExpensesResolver } from './resolvers/expenses-resolver.service';
+import { PayersResolver } from './resolvers/payers-resolver.service';
+import { PayeesResolver } from './resolvers/payees-resolver.service';
+import { GroupsResolver } from './resolvers/groups-resolver.service';
+import { FriendsResolver } from './resolvers/friends-resolver.service';
 
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'activity', component: ActivityComponent },
-  { path: 'allexpenses', component: AllExpensesComponent },
-  { path: 'groups', component: GroupsComponent },
-  { path: 'friends', component: FriendsComponent },
+  { path: 'activity', component: ActivityComponent, resolve: {resolvedData: ActivitiesResolver} },
+  {
+    path: 'allexpenses',
+    component: AllExpensesComponent,
+    resolve: {
+      resolvedExpenses: ExpensesResolver,
+      resolvedPayers: PayersResolver,
+      resolvedPayees: PayeesResolver
+    }
+  },
+  { path: 'groups', component: GroupsComponent, resolve: {resolvedData: GroupsResolver} },
+  { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
+  { path: 'expenses', component: ExpensesComponent },
   { path: '', component: DashboardComponent },
 ];
 

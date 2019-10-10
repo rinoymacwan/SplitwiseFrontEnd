@@ -1,12 +1,23 @@
 <div class="row">
-    <div class="col-7">
-        <h2 >All Expenses</h2>
-    </div>
-    <div class="col-2.5">
-        <button class="btn btn-primary">Add an expense</button>
-    </div>
-    <div class="col-2">
-        <button class="btn btn-primary">Settle up</button>
-    </div>
+  <div class="col-7">
+    <h2>All Expenses</h2>
   </div>
-  <hr>
+  <div class="col-2.5">
+    <button class="btn btn-primary">Add an expense</button>
+  </div>
+  <div class="col-2">
+    <button class="btn btn-primary">Settle up</button>
+  </div>
+</div>
+<hr>
+
+<ul class="list-group">
+  <li *ngFor='let expense of expenses' class="list-group-item">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">{{expense.dateTime | date: 'dd/MM/yyyy'}}</div>
+        <div class="col-md-2">{{expense.description}}</div>
+      </div>
+    </div>
+  </li>
+</ul>

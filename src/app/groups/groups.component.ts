@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { ActivatedRoute } from '@angular/router';
+import { Group } from '../models/group';
 
 @Component({
   selector: 'app-groups',
@@ -7,7 +10,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GroupsComponent implements OnInit {
 
-  constructor() { }
+  public groups: Group[];
+  constructor(private dataService: DataService, private route: ActivatedRoute) {
+    this.groups = this.route.snapshot.data.resolvedData;
+    console.log(JSON.stringify(this.groups));
+   }
 
   ngOnInit() {
   }
