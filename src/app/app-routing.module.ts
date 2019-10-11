@@ -13,6 +13,7 @@ import { PayeesResolver } from './resolvers/payees-resolver.service';
 import { GroupsResolver } from './resolvers/groups-resolver.service';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
 import { DashboardResolver } from './resolvers/dashboard-resolver.service';
+import { FriendComponent } from './friend/friend.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
   },
   { path: 'groups', component: GroupsComponent, resolve: {resolvedData: GroupsResolver} },
   { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
+  { path: 'friend/:id', component: FriendComponent },
   { path: 'expenses', component: ExpensesComponent },
   { path: '', component: DashboardComponent,  resolve: {resolvedData: DashboardResolver}  },
 ];
