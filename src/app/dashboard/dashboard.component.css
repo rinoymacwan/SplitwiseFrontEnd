@@ -15,3 +15,10 @@ hr {
 .centre-col{
   text-align: center;
 }
+
+.owe{
+  color: red;
+}
+.owed{
+  color: green;
+}

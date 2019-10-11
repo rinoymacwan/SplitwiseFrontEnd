@@ -10,6 +10,6 @@ import { Observable } from 'rxjs';
 export class PayersResolver implements Resolve<Payer[]> {
   constructor(private dataService: DataService) { }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Payer[]> {
-    return this.dataService.getPayers();
+    return this.dataService.getPayersByPayerId(1);
    }
 }

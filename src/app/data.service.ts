@@ -7,6 +7,7 @@ import { Payee } from './models/payee';
 import { Payer } from './models/payer';
 import { Group } from './models/group';
 import { User } from './models/user';
+import { Settlement } from './models/settlement';
 
 @Injectable({
   providedIn: 'root'
@@ -23,30 +24,43 @@ export class DataService {
     const x = this.http.get<Expense[]>('http://localhost:6700/api/Expenses');
     return x;
   }
-  getPayers(): Observable<Payer[]> {
-    const x = this.http.get<Payer[]>('http://localhost:6700/api/Payers');
+  getPayersByPayerId(id: number): Observable<Payer[]> {
+    const x = this.http.get<Payer[]>('http://localhost:6700/api/Payers/ByPayerId/' + id);
     return x;
   }
   getPayersByExpenseId(id: number): Observable<Payer[]> {
     const x = this.http.get<Payer[]>('http://localhost:6700/api/Payers/ByExpenseId/' + id);
     return x;
   }
-  getPayees(): Observable<Payee[]> {
-    const x = this.http.get<Payee[]>('http://localhost:6700/api/Payees');
+  getPayeesByPayeeId(id: number): Observable<Payee[]> {
+    const x = this.http.get<Payee[]>('http://localhost:6700/api/Payees/ByPayeeId/' + id);
     return x;
   }
   getPayeesByExpenseId(id: number): Observable<Payee[]> {
     const x = this.http.get<Payee[]>('http://localhost:6700/api/Payees/ByExpenseId/' + id);
     return x;
   }
+  getPayers(): Observable<Payer[]> {
+    const x = this.http.get<Payer[]>('http://localhost:6700/api/Payers');
+    return x;
+  }
+  getPayees(): Observable<Payee[]> {
+    const x = this.http.get<Payee[]>('http://localhost:6700/api/Payees');
+    return x;
+  }
   getGroupsByUserId(id: number): Observable<Group[]> {
     const x = this.http.get<Group[]>('http://localhost:6700/api/Groups/ByUserId/' + id);
-    console.log(JSON.stringify(x));
+    // console.log(JSON.stringify(x));
     return x;
   }
   getFriends(id: number): Observable<User[]> {
     const x = this.http.get<User[]>('http://localhost:6700/api/Users/' + id + '/friends');
-    console.log(JSON.stringify(x));
+    // console.log(JSON.stringify(x));
+    return x;
+  }
+  getSettlementsByUserId(id: number): Observable<Settlement[]> {
+    const x = this.http.get<Settlement[]>('http://localhost:6700/api/Settlements/GetByUserId/' + id);
+    // console.log(JSON.stringify(x));
     return x;
   }
 }

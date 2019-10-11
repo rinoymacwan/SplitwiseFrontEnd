@@ -12,10 +12,11 @@ import { PayersResolver } from './resolvers/payers-resolver.service';
 import { PayeesResolver } from './resolvers/payees-resolver.service';
 import { GroupsResolver } from './resolvers/groups-resolver.service';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
+import { DashboardResolver } from './resolvers/dashboard-resolver.service';
 
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
   { path: 'activity', component: ActivityComponent, resolve: {resolvedData: ActivitiesResolver} },
   {
     path: 'allexpenses',
@@ -29,7 +30,7 @@ const routes: Routes = [
   { path: 'groups', component: GroupsComponent, resolve: {resolvedData: GroupsResolver} },
   { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
   { path: 'expenses', component: ExpensesComponent },
-  { path: '', component: DashboardComponent },
+  { path: '', component: DashboardComponent,  resolve: {resolvedData: DashboardResolver}  },
 ];
 
 @NgModule({

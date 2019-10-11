@@ -10,6 +10,6 @@ import { Observable } from 'rxjs';
 export class PayeesResolver implements Resolve<Payee[]> {
   constructor(private dataService: DataService) { }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Payee[]> {
-    return this.dataService.getPayees();
+    return this.dataService.getPayeesByPayeeId(1);
    }
 }

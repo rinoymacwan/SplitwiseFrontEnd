@@ -4,6 +4,6 @@ export class Payee {
   id: number;
   expenseId: number;
   payeeId: number;
-  payee: User;
+  user: User;
   payeeShare: number;
 }
