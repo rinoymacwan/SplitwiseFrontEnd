@@ -1,1 +1,11 @@
-<p>friend works!</p>
+
+<ul class="list-group">
+    <li *ngFor='let pay of payments' class="list-group-item">
+      <div class="row">
+      <div class="col-2">{{pay.date | date: 'dd/MM/yyyy'}}</div>
+      <div class="col-2">{{pay.expenseName}}</div>
+      <div class="col-2">{{pay.fromName}} paid {{pay.amount}}</div>
+      <div class="col-2">{{pay.fromName}} lent {{pay.toName}} {{pay.lent}}</div>
+    </div>
+    </li>
+  </ul>

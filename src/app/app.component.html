@@ -1,19 +1,25 @@
 <div class="container-fluid">
-<nav id="sideNav" class="col-lg-3">
-  <br>
-  <br>
-  <br>
-  <ul>
-    <li><a [routerLink]="['/dashboard']">Dashboard</a></li>
-    <li><a [routerLink]="['/activity']">Activity</a></li>
-    <li><a [routerLink]="['/allexpenses']">All Expenses</a></li>
-    <li><a [routerLink]="['/groups']">Groups</a></li>
-    <li><a [routerLink]="['/friends']">Friends</a></li>
-  </ul>
-</nav>
+  <nav id="sideNav" class="col-lg-3">
+    <br>
+    <br>
+    <br>
+    <ul>
+      <li><a [routerLink]="['/dashboard']">Dashboard</a></li>
+      <li><a [routerLink]="['/activity']">Activity</a></li>
+      <li><a [routerLink]="['/allexpenses']">All Expenses</a></li>
+      <li><a [routerLink]="['/groups']">Groups</a></li>
+      <li><i class="fas fa-user"></i><a [routerLink]="['/friends']">Friends</a></li>
+
+          <li *ngFor='let friend of friends'>
+              <i class="fas fa-user-alt"></i>
+            <a [routerLink]="['/friend',friend.id]">{{friend.name}}</a>
+          </li>
+
+    </ul>
+  </nav>
 </div>
 <br>
 
 <div id="mainContent" class="col-lg-9">
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>

@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit {
       const y = this.payees.filter(k => k.expenseId === owed.expenseId);
       for (const x of y) {
         this.AllOwedTab.push(x.user.name + ' owes you Rs.' + x.payeeShare);
-        this.payments.push(new Payment(this.userId, 'You', x.user.id, x.user.name, x.payeeShare * -1));
+        this.payments.push(new Payment('', this.userId, 'You', x.user.id, x.user.name, x.payeeShare * -1, 0, new Date()));
       }
     }
 
@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
         if (temp != null) {
           temp.amount = temp.amount + owes.payeeShare;
         } else {
-          this.payments.push(new Payment(this.userId, 'You', x.user.id, x.user.name, owes.payeeShare));
+          this.payments.push(new Payment('', this.userId, 'You', x.user.id, x.user.name, owes.payeeShare, 0, new Date()));
         }
         // this.payments.push(new Payment(this.userId, 'You', x.user.id, x.user.name, owes.payeeShare));
       }

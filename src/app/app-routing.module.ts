@@ -30,9 +30,9 @@ const routes: Routes = [
   },
   { path: 'groups', component: GroupsComponent, resolve: {resolvedData: GroupsResolver} },
   { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
-  { path: 'friend/:id', component: FriendComponent },
+  { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: DashboardResolver} },
   { path: 'expenses', component: ExpensesComponent },
-  { path: '', component: DashboardComponent,  resolve: {resolvedData: DashboardResolver}  },
+  { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
 ];
 
 @NgModule({
