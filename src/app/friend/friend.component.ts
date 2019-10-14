@@ -5,6 +5,7 @@ import { Payee } from '../models/payee';
 import { Settlement } from '../models/settlement';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Payment } from '../models/payment';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-friend',
@@ -19,6 +20,7 @@ export class FriendComponent implements OnInit {
   settlements: Settlement[];
   userId: number;
   friendId: number;
+  friend: User;
   owesTab: string[];
   owedTab: string[];
   AllOwesTab: string[];
@@ -36,8 +38,10 @@ export class FriendComponent implements OnInit {
     this.payers = x.payers;
     this.payees = x.payees;
     this.settlements = x.settlements;
+    this.friend = x.friend;
     this.userId = 1;
     this.friendId = +this.route.snapshot.paramMap.get('id');
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.owedTab = [];
     this.owesTab = [];
     this.AllOwedTab = [];

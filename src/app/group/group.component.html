@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-7">
+    <h2>{{this.group.name}}</h2>
+  </div>
+  <div class="col-2.5">
+    <a [routerLink]="['/expenses']"><button class="btn btn-primary">Add an expense</button></a>
+  </div>
+  <div class="col-2">
+    <button class="btn btn-primary">Settle up</button>
+  </div>
+</div>
+<hr>
+
+<h4>Members</h4>
+<hr>
+<ul class="list-group">
+    <li class="list-group-item"><a [routerLink]="['/dashboard']">You</a></li>
+  <li *ngFor='let member of members' class="list-group-item"><a [routerLink]="['/friend',member.id]">{{member.name}}</a></li>
+</ul>
+
+<hr>
+
+<h4>Expenses</h4>
+<hr>
+<ul class="list-group">
+    <li *ngFor='let pay of payments' class="list-group-item">
+      <div class="row">
+        <div class="col-2">{{pay.date | date: 'dd/MM/yyyy'}}</div>
+        <div class="col-2">{{pay.expenseName}}</div>
+        <div class="col-2">{{pay.fromName}} paid Rs.{{pay.amount}}</div>
+        <div class="col-2">{{pay.fromName}} lent {{pay.toName}} Rs.{{pay.lent}}</div>
+      </div>
+    </li>
+  </ul>

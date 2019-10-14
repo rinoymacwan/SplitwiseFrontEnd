@@ -63,5 +63,15 @@ export class DataService {
     // console.log(JSON.stringify(x));
     return x;
   }
+  getGroup(id: number): any {
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"+id);
+    const x = this.http.get<any>('http://localhost:6700/api/Groups/' + id);
+    return x;
+  }
+  getUser(id: number): Observable<User> {
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"+id);
+    const x = this.http.get<any>('http://localhost:6700/api/Users/' + id);
+    return x;
+  }
 }
 

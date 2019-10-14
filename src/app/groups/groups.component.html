@@ -9,5 +9,5 @@
   <hr>
 
   <ul class="list-group">
-    <li *ngFor='let group of groups' class="list-group-item">{{group.name}}</li>
+    <li *ngFor='let group of groups' class="list-group-item"><a [routerLink]="['/group', group.id]" routerLinkActive="router-link-active" >{{group.name}}</a></li>
   </ul>

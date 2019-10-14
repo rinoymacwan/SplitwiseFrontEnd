@@ -11,7 +11,7 @@ import { Settlement } from '../models/settlement';
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardResolver implements Resolve<any> {
+export class FriendResolver implements Resolve<any> {
   expenses: Expense[];
   payers: Payer[];
   payees: Payee[];
@@ -21,29 +21,19 @@ export class DashboardResolver implements Resolve<any> {
     this.userId = 1;
   }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    // this.dataService.getExpenses().subscribe(exp => {
-    //   this.expenses = exp;
-    // });
-    // this.dataService.getPayersByPayerId(this.userId).subscribe(pyr => {
-    //   this.payers = pyr;
-    // });
-    // this.dataService.getPayeesByPayeeId(this.userId).subscribe(pye => {
-    //   this.payees = pye;
-    // });
-    // this.dataService.getSettlementsByUserId(this.userId).subscribe(set => {
-    //   this.settlements = set;
-    // });
     const join = forkJoin([
       this.dataService.getExpenses(),
       this.dataService.getPayers(),
       this.dataService.getPayees(),
-      this.dataService.getSettlementsByUserId(this.userId)
+      this.dataService.getSettlementsByUserId(this.userId),
+      this.dataService.getUser(route.params['id'])
     ]).pipe(map((results) => {
       return {
         expenses: results[0],
         payers: results[1],
         payees: results[2],
-        settlements: results[3]
+        settlements: results[3],
+        friend: results[4]
       };
     }));
     return join;

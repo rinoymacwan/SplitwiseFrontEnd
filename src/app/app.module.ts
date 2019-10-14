@@ -12,6 +12,7 @@ import { ExpensesComponent } from './expenses/expenses.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FriendComponent } from './friend/friend.component';
+import { GroupComponent } from './group/group.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { FriendComponent } from './friend/friend.component';
     FriendsComponent,
     ExpensesComponent,
     GroupsComponent,
-    FriendComponent
+    FriendComponent,
+    GroupComponent
   ],
   imports: [
     BrowserModule,

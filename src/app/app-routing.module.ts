@@ -14,6 +14,9 @@ import { GroupsResolver } from './resolvers/groups-resolver.service';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
 import { DashboardResolver } from './resolvers/dashboard-resolver.service';
 import { FriendComponent } from './friend/friend.component';
+import { GroupComponent } from './group/group.component';
+import { GroupResolver } from './resolvers/group-resolver.service';
+import { FriendResolver } from './resolvers/friend-resolver.service';
 
 
 const routes: Routes = [
@@ -29,8 +32,9 @@ const routes: Routes = [
     }
   },
   { path: 'groups', component: GroupsComponent, resolve: {resolvedData: GroupsResolver} },
+  { path: 'group/:id', component: GroupComponent, resolve: {resolvedData: GroupResolver} },
   { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
-  { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: DashboardResolver} },
+  { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: FriendResolver} },
   { path: 'expenses', component: ExpensesComponent },
   { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
 ];
