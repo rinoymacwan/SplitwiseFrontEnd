@@ -1,1 +1,108 @@
-<p>single expense</p>
+<div class="row">
+  <div class="col-7">
+    <h2>Add expense</h2>
+  </div>
+</div>
+<hr>
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-10">
+        <div class="form-group row">
+          <label for="members" class="col-md-1.5 control-label">with you and:</label>
+          <div class="col-md-2">
+            <select class="form-control" id="members">
+              <option value="" disabled selected>--select--</option>
+              <option *ngFor="let friend of friends" [value]="friend.id">{{friend.name}}</option>
+            </select>
+          </div>
+          <div class="col-md-2"></div>
+          <label for="groups" class="col-md-1.5 control-label">group:</label>
+          <div class="col-md-3">
+            <select class="form-control" [(ngModel)]="expense.groupId" (change)="loadPaid()" name="groups" id="groups">
+                <option value="" selected>--none--</option>
+                <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+      <input type="text" class="form-control" [(ngModel)]="expense.description" placeholder="enter a description" style="margin-bottom: 5px;">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-3"></div>
+    <label for="currency" class="col-md-1 control-label">Rs.</label>
+    <div class="col-md-2">
+      <input type="text" class="form-control" [(ngModel)]="expense.total" id="amount" placeholder="amount">
+    </div>
+  </div>
+  <br>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-10">
+        <div class="form-group row">
+          <label for="paidBy" class="col-md-1.5 control-label">paid by:</label>
+          <div class="col-md-2">
+            <select class="form-control" [(ngModel)]="payer.id" id="paidBy" name="paidBy">
+                <option value="0" selected>You</option>
+                <option *ngFor="let user of this.paidBy" [value]="user.id">{{user.name}}</option>
+            </select>
+          </div>
+          <div class="col-md-2"></div>
+          <label for="splitBy" class="col-md-1.5 control-label">and split:</label>
+          <div class="col-md-3">
+            <select class="form-control" id="splitBy">
+              <option>equally</option>
+              <option>unequally</option>
+              <option>by percentage</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-10">
+        <div class="form-group row">
+          <div class="col-md-4">
+            <input type="date" class="form-control" id="date">
+          </div>
+          <div class="col-md-2"></div>
+          <div class="col-md-2">
+            <button class="btn btn-secondary">Add notes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-6"></div>
+      <div class="col-md-6">
+        <div class="form-group row">
+          <div class="col-md-2">
+            <button class="btn btn-secondary">Cancel</button>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-2">
+            <button class="btn btn-secondary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>

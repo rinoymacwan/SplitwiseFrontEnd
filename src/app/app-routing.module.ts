@@ -17,6 +17,7 @@ import { FriendComponent } from './friend/friend.component';
 import { GroupComponent } from './group/group.component';
 import { GroupResolver } from './resolvers/group-resolver.service';
 import { FriendResolver } from './resolvers/friend-resolver.service';
+import { AddEditExpensesResolver } from './resolvers/add-edit-expenses-resolver.service';
 
 
 const routes: Routes = [
@@ -35,7 +36,7 @@ const routes: Routes = [
   { path: 'group/:id', component: GroupComponent, resolve: {resolvedData: GroupResolver} },
   { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
   { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: FriendResolver} },
-  { path: 'expenses', component: ExpensesComponent },
+  { path: 'expenses', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver} },
   { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
 ];
 

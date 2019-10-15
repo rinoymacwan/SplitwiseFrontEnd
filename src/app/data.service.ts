@@ -64,13 +64,15 @@ export class DataService {
     return x;
   }
   getGroup(id: number): any {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"+id);
     const x = this.http.get<any>('http://localhost:6700/api/Groups/' + id);
     return x;
   }
   getUser(id: number): Observable<User> {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"+id);
     const x = this.http.get<any>('http://localhost:6700/api/Users/' + id);
+    return x;
+  }
+  getGroupMembers(id: number): Promise<any> {
+    const x = this.http.get<any>('http://localhost:6700/api/Groups/' + id).toPromise();
     return x;
   }
 }

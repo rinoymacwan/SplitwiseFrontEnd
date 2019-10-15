@@ -16,10 +16,13 @@ hr {
   text-align: center;
 }
 
-select.form-control{
-  display:inline-block
-}
 
 .group{
   margin-right: 5px;
+}
+
+input{
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }
