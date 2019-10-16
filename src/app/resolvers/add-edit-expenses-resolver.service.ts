@@ -17,12 +17,14 @@ export class AddEditExpensesResolver implements Resolve<any> {
     const join = forkJoin([
       this.dataService.getFriends(this.userId),
       this.dataService.getGroupsByUserId(this.userId),
-      this.dataService.getCategories()
+      this.dataService.getCategories(),
+      this.dataService.getUser(1)
     ]).pipe(map((results) => {
       return {
         friends: results[0],
         groups: results[1],
-        categories: results[2]
+        categories: results[2],
+        user: results[3]
       };
     }));
     return join;

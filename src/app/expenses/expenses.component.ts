@@ -29,6 +29,9 @@ export class ExpensesComponent implements OnInit {
   isPartOfExpense: boolean[];
   isIndividual: boolean;
   flag: boolean;
+  selectedUsers: User[];
+  currentUser: User;
+  selectedShares: number[];
   constructor(private dataService: DataService, private route: ActivatedRoute) {
     this.expense = new Expense();
     this.flag = false;
@@ -38,10 +41,13 @@ export class ExpensesComponent implements OnInit {
     this.expenseBetween = this.friends;
     this.groups = x.groups;
     this.categories = x.categories;
+    this.currentUser = x.user;
     this.paidBy = this.friends;
     this.userId = 1;
     this.selectedFriend = new User();
     this.isIndividual = true;
+    this.selectedUsers = [];
+    this.selectedShares = Array.apply(null, new Array(10)).map(()=> 0);
     console.log(JSON.stringify(this.friends));
     console.log(JSON.stringify(this.groups));
   }
@@ -74,7 +80,36 @@ export class ExpensesComponent implements OnInit {
     this.selectedFriend = this.friends.find(k => k.id === +id);
     console.log(JSON.stringify(this.selectedFriend));
   }
-  onCheck(checked: boolean, userId: number) {
-    console.log(checked + "|" + userId);
+  onCheck(checked: boolean, id: number) {
+    console.log(checked + "|" + id);
+    if (checked === true) {
+      if ( id === this.userId) {
+        this.selectedUsers.push(this.currentUser);
+      } else {
+        this.selectedUsers.push(this.friends.find(k => k.id === id) );
+      }
+    } else {
+      // delete
+      const x = this.selectedUsers.find(k => k.id === id);
+      this.selectedUsers = this.selectedUsers.filter(k => k !== x);
+    }
+    console.log(JSON.stringify(this.selectedUsers));
+  }
+  onSplit() {
+    console.log(this.expense.splitBy);
+
+    if (this.expense.splitBy === 'equally') {
+      const numberOfMembers = this.selectedUsers.length;
+      const share = this.expense.total / numberOfMembers;
+      let k = 0;
+      for ( const x of this.selectedUsers) {
+        this.selectedShares[x.id] = share;
+        k = k + 1;
+      }
+
+      console.log(this.selectedShares);
+
+
+    }
   }
 }
