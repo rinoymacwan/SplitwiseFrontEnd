@@ -4,7 +4,7 @@
   </div>
 </div>
 <hr>
-<form class="form-horizontal" role="form">
+<form class="form-horizontal" #myForm="ngForm" class="myForm" (ngSubmit)="onSubmit()" ngNativeValidate>
   <div class="form-group">
     <div class="row">
       <div class="col-md-2"></div>
@@ -12,7 +12,7 @@
         <div class="form-group row">
           <label for="members" class="col-md-1.5 control-label">with you and:</label>
           <div class="col-md-2">
-            <select class="form-control" id="members">
+            <select #sel class="form-control" *ngIf="this.isIndividual==true" id="members" name="friends" (change)="addUser(sel.value)">
               <option value="" disabled selected>--select--</option>
               <option *ngFor="let friend of friends" [value]="friend.id">{{friend.name}}</option>
             </select>
@@ -21,8 +21,8 @@
           <label for="groups" class="col-md-1.5 control-label">group:</label>
           <div class="col-md-3">
             <select class="form-control" [(ngModel)]="expense.groupId" (change)="loadPaid()" name="groups" id="groups">
-                <option value="" selected>--none--</option>
-                <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+              <option value="" selected>--none--</option>
+              <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
             </select>
           </div>
         </div>
@@ -32,14 +32,26 @@
   <div class="row">
     <div class="col-4"></div>
     <div class="col-4">
-      <input type="text" class="form-control" [(ngModel)]="expense.description" placeholder="enter a description" style="margin-bottom: 5px;">
+      <input type="text" class="form-control" [(ngModel)]="expense.description" placeholder="enter a description"
+        style="margin-bottom: 5px;" name="description" required>
     </div>
   </div>
   <div class="form-group row">
     <div class="col-3"></div>
     <label for="currency" class="col-md-1 control-label">Rs.</label>
     <div class="col-md-2">
-      <input type="text" class="form-control" [(ngModel)]="expense.total" id="amount" placeholder="amount">
+      <input type="text" class="form-control" [(ngModel)]="expense.total" id="amount" placeholder="amount" name="amount"
+        required>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-3"></div>
+    <label for="category" class="col-md-1 control-label">Category</label>
+    <div class="col-md-2">
+      <select class="form-control" id="category" name="category" [(ngModel)]="expense.categoryId">
+        <option value="" selected>--none--</option>
+        <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+      </select>
     </div>
   </div>
   <br>
@@ -51,14 +63,14 @@
           <label for="paidBy" class="col-md-1.5 control-label">paid by:</label>
           <div class="col-md-2">
             <select class="form-control" [(ngModel)]="payer.id" id="paidBy" name="paidBy">
-                <option value="0" selected>You</option>
-                <option *ngFor="let user of this.paidBy" [value]="user.id">{{user.name}}</option>
+              <option value="0" selected>You</option>
+              <option *ngFor="let user of this.paidBy" [value]="user.id">{{user.name}}</option>
             </select>
           </div>
           <div class="col-md-2"></div>
           <label for="splitBy" class="col-md-1.5 control-label">and split:</label>
           <div class="col-md-3">
-            <select class="form-control" id="splitBy">
+            <select class="form-control" id="splitBy" name="splitBy" [(ngModel)]="expense.splitBy">
               <option>equally</option>
               <option>unequally</option>
               <option>by percentage</option>
@@ -70,13 +82,50 @@
   </div>
 
   <br>
+
+  <div class="row" *ngIf="this.isIndividual === true">
+      <div class="col-4"></div>
+      <div class="col-7">
+          <span>
+              <div class="row">
+                <div class="col-md-2"><label for="you" class="col-md-1.5 control-label">You</label></div>
+                <div class="col-md-2"><input type="number" class="form-control" style="margin-bottom: 5px;" name="user" required></div>
+              </div>
+            </span>
+        <span>
+          <div class="row">
+            <div class="col-md-2"><label class="col-md-1.5" name="user" is="friendid">{{this.selectedFriend.name}}</label></div>
+            <div class="col-md-2"><input type="number" class="form-control" style="margin-bottom: 5px;" name="user" required></div>
+          </div>
+        </span>
+      </div>
+    </div>
+  <div class="row" *ngIf="this.isIndividual === false">
+    <div class="col-4"></div>
+    <div class="col-6">
+      <div class="row">
+          <div class="col-md-2"><label class="col-md-1.5" name="user">You</label></div>
+          <div class="col-3"><input type="number" class="form-control" style="margin-bottom: 5px;" name="user"></div>
+          <div class="col-1"><input #mybox type="checkbox" (change)="onCheck(mybox.checked,this.userId)"></div>
+      </div>
+
+      <span *ngFor="let user of expenseBetween">
+        <div class="row">
+          <div class="col-md-2"><label class="col-md-1.5" name="user">{{user.name}}</label></div>
+          <div class="col-3"><input type="number" class="form-control" style="margin-bottom: 5px;" name="user"></div>
+          <div class="col-1"><input #mybox type="checkbox" (change)="onCheck(mybox.checked,user.id)"></div>
+        </div>
+      </span>
+    </div>
+  </div>
+
   <div class="form-group">
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-10">
         <div class="form-group row">
           <div class="col-md-4">
-            <input type="date" class="form-control" id="date">
+            <input type="date" class="form-control" id="date" [(ngModel)]="expense.dateTime" name="date" required>
           </div>
           <div class="col-md-2"></div>
           <div class="col-md-2">
@@ -98,7 +147,7 @@
           </div>
           <div class="col-md-1"></div>
           <div class="col-md-2">
-            <button class="btn btn-secondary">Save</button>
+            <button type="submit" class="btn btn-secondary">Save</button>
           </div>
         </div>
       </div>

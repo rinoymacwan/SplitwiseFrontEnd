@@ -26,3 +26,7 @@ input{
   border-left: none;
   border-right: none;
 }
+
+label{
+  margin-top: 10px;
+}

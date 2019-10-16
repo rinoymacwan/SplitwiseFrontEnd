@@ -8,6 +8,7 @@ import { Payer } from './models/payer';
 import { Group } from './models/group';
 import { User } from './models/user';
 import { Settlement } from './models/settlement';
+import { Category } from './models/category';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +74,11 @@ export class DataService {
   }
   getGroupMembers(id: number): Promise<any> {
     const x = this.http.get<any>('http://localhost:6700/api/Groups/' + id).toPromise();
+    return x;
+  }
+  getCategories(): Observable<Category[]> {
+    const x = this.http.get<Category[]>('http://localhost:6700/api/Categories');
+    // console.log(JSON.stringify(x));
     return x;
   }
 }
