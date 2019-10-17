@@ -24,6 +24,8 @@ export class ExpensesComponent implements OnInit {
   paidBy: User[];
   payer: Payer;
   payee: Payee;
+  payers: Payer[];
+  payees: Payee[];
   userId: number;
   categories: Category[];
   selectedFriend: User;
@@ -41,11 +43,14 @@ export class ExpensesComponent implements OnInit {
   finalMyShare: number;
   finalSelectedFriendShare: number;
   newExpense: boolean;
+  notes: boolean;
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     this.expense = new Expense();
     this.flag = false;
     this.payer = new Payer();
     this.payee = new Payee();
+    this.payers = [];
+    this.payees = [];
     const x = this.route.snapshot.data.resolvedData;
     this.friends = x.friends;
     this.expenseBetween = this.friends;
@@ -64,19 +69,27 @@ export class ExpensesComponent implements OnInit {
     this.myShare = 0;
     this.finalMyShare = 0;
     this.finalSelectedFriendShare = 0;
+    this.notes = false;
     // console.log(JSON.stringify(this.friends));
     // console.log(JSON.stringify(this.groups));
     const param = this.route.snapshot.paramMap.get('id');
     if (+param === 0) {
+      console.log("NEW EXPENSE");
       this.newExpense = true;
     } else {
       this.newExpense = false;
+      this.expense = x.expense;
+      this.payers = x.payers;
+      this.payees = x.payees;
+      this.payer = this.payers.find(k => this.expense.id === k.expenseId );
+      this.payees = this.payees.filter(k => k.expenseId === this.expense.id);
     }
   }
   ngOnInit() {
   }
   async loadPaid() {
     console.log(this.expense.groupId);
+    this.equalShare = [];
     if (this.expense.groupId !== undefined && this.expense.groupId > 0) {
       await this.dataService.getGroupMembers(this.expense.groupId).then(
         (k) => {
@@ -162,6 +175,13 @@ export class ExpensesComponent implements OnInit {
   }
   onIndividual() {
 
+  }
+  toggleNotes() {
+    this.notes = !this.notes;
+  }
+  async delete() {
+    await this.dataService.deleteExpense(this.expense);
+    this.router.navigate([''], { state: { msg: 'Expense deleted.' } });
   }
   onSplit() {
     // console.log(this.expense.splitBy);

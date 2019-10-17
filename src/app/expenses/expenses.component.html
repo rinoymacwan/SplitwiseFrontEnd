@@ -128,19 +128,23 @@
         </span>
       </div>
     </div>
-
+    <br>
     <div class="form-group">
       <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-10">
           <div class="form-group row">
+            <div class="col-md-2">
+              <button class="btn btn-secondary" name="toggleNotes" (click)="toggleNotes()">Add notes</button>
+              <textarea *ngIf="this.notes==true" class="textarea" name="textarea" id="textarea"
+                [(ngModel)]="this.expense.notes"></textarea>
+            </div>
+            <div class="col-md-2"></div>
             <div class="col-md-4">
               <input type="date" class="form-control" id="date" [(ngModel)]="expense.dateTime" name="date" required>
             </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-2">
-              <button class="btn btn-secondary">Add notes</button>
-            </div>
+
+
           </div>
         </div>
       </div>
@@ -165,4 +169,20 @@
     </div>
 
   </form>
+</div>
+
+<div *ngIf="this.newExpense == false">
+
+  <h3>{{this.expense.description}}</h3>
+  added by userId : {{this.expense.addedById}} on {{this.expense.dateTime | date: 'dd/MM/yyyy'}}
+  <br>
+  <br>
+  {{this.payer.user.name}} paid {{this.payer.amountPaid}} and owes {{this.payer.payerShare}}.
+  <br>
+  <br>
+  <div *ngFor="let user of this.payees">
+    {{user.user.name}} owes {{user.payeeShare}}.
+  </div>
+  <br>
+  <button class="btn btn-primary" (click)="delete()">Delete Expense</button>
 </div>

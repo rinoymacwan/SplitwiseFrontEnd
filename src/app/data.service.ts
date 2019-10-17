@@ -90,5 +90,11 @@ export class DataService {
   async AddPayee(payee: Payee) {
     await this.http.post('http://localhost:6700/api/Payees', payee).toPromise();
   }
+  getExpense(id: number): Observable<Expense>{
+    return this.http.get<Expense>('http://localhost:6700/api/Expenses/' + id);
+  }
+  async deleteExpense(expense: Expense): Promise<Expense> {
+    return await this.http.delete<Expense>('http://localhost:6700/api/Expenses/' + expense.id).toPromise();
+  }
 }
 

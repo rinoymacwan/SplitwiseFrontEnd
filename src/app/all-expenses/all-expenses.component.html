@@ -6,7 +6,7 @@
     <a [routerLink]="['/expenses', 0]"><button class="btn btn-primary">Add an expense</button></a>
   </div>
   <div class="col-2">
-    <button class="btn btn-primary">Settle up</button>
+      <a [routerLink]="['/settleup']"><button class="btn btn-primary">Settle up</button></a>
   </div>
 </div>
 <hr>
@@ -16,7 +16,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-2">{{expense.dateTime | date: 'dd/MM/yyyy'}}</div>
-        <div class="col-md-2">{{expense.description}}</div>
+        <div class="col-md-2"><a [routerLink]="['/expenses', expense.id]">{{expense.description}}</a></div>
       </div>
     </div>
   </li>
