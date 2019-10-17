@@ -36,7 +36,7 @@ const routes: Routes = [
   { path: 'group/:id', component: GroupComponent, resolve: {resolvedData: GroupResolver} },
   { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
   { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: FriendResolver} },
-  { path: 'expenses', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver} },
+  { path: 'expenses/:id', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver} },
   { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
 ];
 

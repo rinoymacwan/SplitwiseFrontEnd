@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { Expense } from '../models/expense';
 import { User } from '../models/user';
@@ -7,6 +7,7 @@ import { Group } from '../models/group';
 import { Payer } from '../models/payer';
 import { NgForm } from '@angular/forms';
 import { Category } from '../models/category';
+import { Payee } from '../models/payee';
 
 @Component({
   selector: 'app-expenses',
@@ -22,6 +23,7 @@ export class ExpensesComponent implements OnInit {
   expense: Expense;
   paidBy: User[];
   payer: Payer;
+  payee: Payee;
   userId: number;
   categories: Category[];
   selectedFriend: User;
@@ -32,10 +34,18 @@ export class ExpensesComponent implements OnInit {
   selectedUsers: User[];
   currentUser: User;
   selectedShares: number[];
-  constructor(private dataService: DataService, private route: ActivatedRoute) {
+  equalShare: number[];
+  percentageShare: number[];
+  selectedFriendShare: number;
+  myShare: number;
+  finalMyShare: number;
+  finalSelectedFriendShare: number;
+  newExpense: boolean;
+  constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     this.expense = new Expense();
     this.flag = false;
     this.payer = new Payer();
+    this.payee = new Payee();
     const x = this.route.snapshot.data.resolvedData;
     this.friends = x.friends;
     this.expenseBetween = this.friends;
@@ -45,11 +55,23 @@ export class ExpensesComponent implements OnInit {
     this.paidBy = this.friends;
     this.userId = 1;
     this.selectedFriend = new User();
+    this.selectedFriendShare = 0;
     this.isIndividual = true;
     this.selectedUsers = [];
-    this.selectedShares = Array.apply(null, new Array(10)).map(()=> 0);
-    console.log(JSON.stringify(this.friends));
-    console.log(JSON.stringify(this.groups));
+    this.selectedShares = Array.apply(null, new Array(10)).map(() => 0);
+    this.equalShare = [];
+    this.percentageShare = [];
+    this.myShare = 0;
+    this.finalMyShare = 0;
+    this.finalSelectedFriendShare = 0;
+    // console.log(JSON.stringify(this.friends));
+    // console.log(JSON.stringify(this.groups));
+    const param = this.route.snapshot.paramMap.get('id');
+    if (+param === 0) {
+      this.newExpense = true;
+    } else {
+      this.newExpense = false;
+    }
   }
   ngOnInit() {
   }
@@ -69,47 +91,107 @@ export class ExpensesComponent implements OnInit {
       this.isIndividual = true;
     }
   }
-  onSubmit(form: NgForm) {
+  async onSubmit(form: NgForm) {
     console.log("form submit");
     this.expense.addedById = this.userId;
     console.log(JSON.stringify(this.expense));
+    if (this.isIndividual === true) {
+      await this.dataService.AddExpense(this.expense).then(
+        k => {
+          this.expense = k;
+        }
+      );
+    } else {
+      await this.dataService.AddExpense(this.expense).then(
+        k => {
+          this.expense = k;
+        }
+      );
+    }
+
+    if (this.isIndividual === true) { // individual expenses
+      // individual payer
+      this.payer.expenseId = this.expense.id;
+      this.payer.amountPaid = this.expense.total;
+      if (this.payer.payerId === this.userId) {
+        this.payer.payerShare = this.finalMyShare;
+      } else {
+        this.payer.payerShare = this.finalSelectedFriendShare;
+      }
+      this.dataService.AddPayer(this.payer);
+
+      // individual payee
+      this.payee.expenseId = this.expense.id;
+      if (this.payer.id === this.userId) {
+        this.payee.payeeId = this.selectedFriend.id;
+        this.payee.payeeShare = this.finalSelectedFriendShare;
+      } else {
+        this.payee.payeeId = this.userId;
+        this.payee.payeeShare = this.finalMyShare;
+      }
+      console.log(JSON.stringify(this.payee));
+      this.dataService.AddPayee(this.payee);
+    } else { // group expenses
+
+    }
+    this.router.navigate([''], { state: { msg: 'Expense added.' } });
   }
   addUser(id: number) {
     console.log(id);
     this.flag = true;
     this.selectedFriend = this.friends.find(k => k.id === +id);
     console.log(JSON.stringify(this.selectedFriend));
+    this.paidBy = [];
+    this.paidBy.push(this.selectedFriend);
   }
   onCheck(checked: boolean, id: number) {
-    console.log(checked + "|" + id);
+    console.log(checked + '|' + id);
     if (checked === true) {
-      if ( id === this.userId) {
+      if (id === this.userId) {
         this.selectedUsers.push(this.currentUser);
       } else {
-        this.selectedUsers.push(this.friends.find(k => k.id === id) );
+        this.selectedUsers.push(this.friends.find(k => k.id === id));
       }
     } else {
       // delete
       const x = this.selectedUsers.find(k => k.id === id);
       this.selectedUsers = this.selectedUsers.filter(k => k !== x);
     }
-    console.log(JSON.stringify(this.selectedUsers));
+    this.onSplit();
+    // console.log(JSON.stringify(this.selectedUsers));
+  }
+  onIndividual() {
+
   }
   onSplit() {
-    console.log(this.expense.splitBy);
-
-    if (this.expense.splitBy === 'equally') {
-      const numberOfMembers = this.selectedUsers.length;
-      const share = this.expense.total / numberOfMembers;
-      let k = 0;
-      for ( const x of this.selectedUsers) {
-        this.selectedShares[x.id] = share;
-        k = k + 1;
+    // console.log(this.expense.splitBy);
+    if (this.isIndividual === true) {
+      if (this.expense.splitBy === 'equally') {
+        this.myShare = this.expense.total / 2;
+        this.selectedFriendShare = this.expense.total / 2;
+        this.finalMyShare = this.myShare;
+        this.finalSelectedFriendShare = this.selectedFriendShare;
+      } else if (this.expense.splitBy === 'by percentage') {
+        this.finalMyShare = this.expense.total * (this.myShare / 100);
+        this.finalSelectedFriendShare = this.expense.total * (this.selectedFriendShare / 100);
       }
-
-      console.log(this.selectedShares);
-
-
+      console.log(this.finalMyShare + '|' + this.finalSelectedFriendShare);
+    } else {
+      if (this.expense.splitBy === 'equally') {
+        this.equalShare = [];
+        const numberOfMembers = this.selectedUsers.length;
+        for (const x of this.selectedUsers) {
+          this.equalShare[x.id] = this.expense.total / numberOfMembers;
+        }
+        console.log(this.equalShare);
+        console.log(this.selectedShares);
+      } else if (this.expense.splitBy === 'by percentage') {
+        this.percentageShare = [];
+        for (const x of this.selectedUsers) {
+          this.percentageShare[x.id] = this.expense.total * (this.equalShare[x.id] / 100);
+          console.log(this.percentageShare);
+        }
+      }
     }
   }
 }

@@ -81,5 +81,14 @@ export class DataService {
     // console.log(JSON.stringify(x));
     return x;
   }
+  async AddExpense(expense: Expense): Promise<Expense>{
+    return await this.http.post<Expense>('http://localhost:6700/api/Expenses', expense).toPromise();
+  }
+  async AddPayer(payer: Payer) {
+    await this.http.post('http://localhost:6700/api/Payers', payer).toPromise();
+  }
+  async AddPayee(payee: Payee) {
+    await this.http.post('http://localhost:6700/api/Payees', payee).toPromise();
+  }
 }
 
