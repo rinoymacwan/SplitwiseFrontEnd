@@ -145,6 +145,16 @@ export class ExpensesComponent implements OnInit {
       console.log(JSON.stringify(this.payee));
       this.dataService.AddPayee(this.payee);
     } else { // group expenses
+      this.payer.expenseId = this.expense.id;
+      this.payer.amountPaid = this.expense.total;
+      this.payer.payerShare = this.equalShare[this.payer.payerId];
+      this.dataService.AddPayer(this.payer);
+      for ( const x of this.selectedUsers) {
+        this.payee.expenseId = this.expense.id;
+        this.payee.payeeId = x.id;
+        this.payee.payeeShare = this.equalShare[x.id];
+        this.dataService.AddPayee(this.payee);
+      }
 
     }
     this.router.navigate([''], { state: { msg: 'Expense added.' } });
@@ -194,6 +204,9 @@ export class ExpensesComponent implements OnInit {
       } else if (this.expense.splitBy === 'by percentage') {
         this.finalMyShare = this.expense.total * (this.myShare / 100);
         this.finalSelectedFriendShare = this.expense.total * (this.selectedFriendShare / 100);
+      } else if (this.expense.splitBy === 'unequally') {
+        this.finalMyShare = this.myShare;
+        this.finalSelectedFriendShare = this.selectedFriendShare;
       }
       console.log(this.finalMyShare + '|' + this.finalSelectedFriendShare);
     } else {
@@ -211,6 +224,7 @@ export class ExpensesComponent implements OnInit {
           this.percentageShare[x.id] = this.expense.total * (this.equalShare[x.id] / 100);
           console.log(this.percentageShare);
         }
+      } else if (this.expense.splitBy === 'unequally') {
       }
     }
   }
