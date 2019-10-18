@@ -8,6 +8,7 @@ import { Payer } from '../models/payer';
 import { NgForm } from '@angular/forms';
 import { Category } from '../models/category';
 import { Payee } from '../models/payee';
+import { Activity } from '../models/activity';
 
 @Component({
   selector: 'app-expenses',
@@ -44,6 +45,7 @@ export class ExpensesComponent implements OnInit {
   finalSelectedFriendShare: number;
   newExpense: boolean;
   notes: boolean;
+  activity: Activity;
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     this.expense = new Expense();
     this.flag = false;
@@ -70,6 +72,7 @@ export class ExpensesComponent implements OnInit {
     this.finalMyShare = 0;
     this.finalSelectedFriendShare = 0;
     this.notes = false;
+    this.activity = new Activity();
     // console.log(JSON.stringify(this.friends));
     // console.log(JSON.stringify(this.groups));
     const param = this.route.snapshot.paramMap.get('id');
@@ -125,25 +128,28 @@ export class ExpensesComponent implements OnInit {
     if (this.isIndividual === true) { // individual expenses
       // individual payer
       this.payer.expenseId = this.expense.id;
-      this.payer.amountPaid = this.expense.total;
-      if (this.payer.payerId === this.userId) {
-        this.payer.payerShare = this.finalMyShare;
-      } else {
-        this.payer.payerShare = this.finalSelectedFriendShare;
-      }
-      this.dataService.AddPayer(this.payer);
-
-      // individual payee
       this.payee.expenseId = this.expense.id;
-      if (this.payer.id === this.userId) {
+      this.payer.amountPaid = this.expense.total;
+      if (+this.payer.payerId === +this.userId) {
+        this.payer.payerShare = this.finalMyShare;
         this.payee.payeeId = this.selectedFriend.id;
         this.payee.payeeShare = this.finalSelectedFriendShare;
+        console.log("I paid");
       } else {
+        this.payer.payerShare = this.finalSelectedFriendShare;
         this.payee.payeeId = this.userId;
         this.payee.payeeShare = this.finalMyShare;
+        console.log("Other paid");
       }
+      console.log("AAAAAAAAAAAAAA");
+      console.log(JSON.stringify(this.payer));
+      this.dataService.AddPayer(this.payer);
+
       console.log(JSON.stringify(this.payee));
       this.dataService.AddPayee(this.payee);
+      // tslint:disable-next-line: max-line-length
+      this.activity.description = this.currentUser.name + ' added ' + this.expense.description + ' with ' + this.selectedFriend.name;
+
     } else { // group expenses
       this.payer.expenseId = this.expense.id;
       this.payer.amountPaid = this.expense.total;
@@ -155,8 +161,14 @@ export class ExpensesComponent implements OnInit {
         this.payee.payeeShare = this.equalShare[x.id];
         this.dataService.AddPayee(this.payee);
       }
+      // tslint:disable-next-line: max-line-length
+      this.activity.description = this.currentUser.name + ' added ' + this.expense.description + ' to ' + this.groups.find(k => k.id === this.expense.groupId).name + ' group. ';
 
     }
+    this.activity.userId = this.userId;
+    this.activity.dateTime = this.expense.dateTime;
+
+    this.dataService.addActivity(this.activity);
     this.router.navigate([''], { state: { msg: 'Expense added.' } });
   }
   addUser(id: number) {

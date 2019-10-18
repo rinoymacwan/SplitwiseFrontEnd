@@ -19,10 +19,11 @@ import { GroupResolver } from './resolvers/group-resolver.service';
 import { FriendResolver } from './resolvers/friend-resolver.service';
 import { AddEditExpensesResolver } from './resolvers/add-edit-expenses-resolver.service';
 import { SettleUpComponent } from './settle-up/settle-up.component';
+import { SettleUpResolver } from './resolvers/settle-up-resolver.service';
 
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
+  { path: 'dashboard', component: DashboardComponent, resolve: {resolvedData: DashboardResolver}, runGuardsAndResolvers: 'always' },
   { path: 'activity', component: ActivityComponent, resolve: {resolvedData: ActivitiesResolver} },
   {
     path: 'allexpenses',
@@ -38,12 +39,14 @@ const routes: Routes = [
   { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
   { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: FriendResolver} },
   { path: 'expenses/:id', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver} },
-  { path: 'settleup', component: SettleUpComponent },
+  { path: 'settleup', component: SettleUpComponent, resolve: {resolvedData: SettleUpResolver} },
   { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    onSameUrlNavigation: 'reload'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -11,6 +11,7 @@ export class ActivitiesResolver implements Resolve<Activity[]>{
 
   constructor(private dataSerive: DataService) { }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Activity[]> {
-    return this.dataSerive.getActivities(1);
+    const x = this.dataSerive.getActivities(1);
+    return x;
    }
 }

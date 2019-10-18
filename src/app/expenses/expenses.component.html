@@ -14,7 +14,7 @@
             <label for="members" class="col-md-1.5 control-label">with you and:</label>
             <div class="col-md-2">
               <select #sel class="form-control" *ngIf="this.isIndividual==true" id="members" name="friends"
-                (change)="addUser(sel.value)">
+                (change)="addUser(sel.value)" [(ngModel)]="this.selectedFriend.id">
                 <option value="" disabled selected>--select--</option>
                 <option *ngFor="let friend of friends" [value]="friend.id">{{friend.name}}</option>
               </select>
@@ -65,8 +65,8 @@
           <div class="form-group row">
             <label for="paidBy" class="col-md-1.5 control-label">paid by:</label>
             <div class="col-md-2">
-              <select class="form-control" [(ngModel)]="payer.payerId" id="paidBy" name="paidBy" required>
-                <option value="0" selected>You</option>
+              <select class="form-control" [(ngModel)]="this.payer.payerId" id="paidBy" name="paidBy" required>
+                <option [value]="this.userId" selected>You</option>
                 <option *ngFor="let user of this.paidBy" [value]="user.id">{{user.name}}</option>
               </select>
             </div>
@@ -94,7 +94,7 @@
           <div class="row">
             <div class="col-md-2"><label for="you" class="col-md-1.5 control-label">You</label></div>
             <div class="col-md-4"><input type="number" class="form-control" style="margin-bottom: 5px;" name="user"
-                [(ngModel)]="this.myShare" required></div>
+                [(ngModel)]="this.myShare" (change)="onSplit()" required></div>
           </div>
         </span>
         <span>
@@ -102,7 +102,7 @@
             <div class="col-md-2"><label class="col-md-1.5" name="user"
                 is="friendid">{{this.selectedFriend.name}}</label></div>
             <div class="col-md-4"><input type="number" class="form-control" style="margin-bottom: 5px;" name="user"
-                [(ngModel)]="this.selectedFriendShare" required></div>
+                [(ngModel)]="this.selectedFriendShare" (change)="onSplit()" required></div>
           </div>
         </span>
       </div>
@@ -129,13 +129,12 @@
       </div>
     </div>
     <br>
-    <div class="form-group">
       <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-10">
-          <div class="form-group row">
+          <div class="row">
             <div class="col-md-2">
-              <button class="btn btn-secondary" name="toggleNotes" (click)="toggleNotes()">Add notes</button>
+              <button type="button" class="btn btn-secondary" name="toggleNotes" (click)="toggleNotes()">Add notes</button>
               <textarea *ngIf="this.notes==true" class="textarea" name="textarea" id="textarea"
                 [(ngModel)]="this.expense.notes"></textarea>
             </div>
@@ -148,7 +147,6 @@
           </div>
         </div>
       </div>
-    </div>
 
     <br>
     <div class="form-group">
@@ -157,7 +155,7 @@
         <div class="col-md-6">
           <div class="form-group row">
             <div class="col-md-2">
-              <button class="btn btn-secondary">Cancel</button>
+              <button type="button" class="btn btn-secondary">Cancel</button>
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-2">
