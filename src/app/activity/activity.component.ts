@@ -10,9 +10,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ActivityComponent implements OnInit {
   public activities: Activity[];
-
+  userId: number;
   constructor(private dataService: DataService, private route: ActivatedRoute) {
     this.activities = this.route.snapshot.data.resolvedData;
+    this.userId = 1;
   }
 
   ngOnInit() {
@@ -22,5 +23,8 @@ export class ActivityComponent implements OnInit {
     // );
     // console.log(JSON.stringify(this.activities));
   }
-
+  async onClear() {
+    this.activities = [];
+    await this.dataService.clearActivities(this.userId);
+  }
 }

@@ -11,19 +11,32 @@ export class GroupResolver implements Resolve<any> {
   constructor(private dataService: DataService, private route: ActivatedRoute) {
    }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    const join = forkJoin([
-      this.dataService.getGroup(route.params['id']),
-      this.dataService.getExpenses(),
-      this.dataService.getPayers(),
-      this.dataService.getPayees()
-    ]).pipe(map((results) => {
-      return {
-        group: results[0],
-        expenses: results[1],
-        payers: results[2],
-        payees: results[3]
-      };
-    }));
-    return join;
+    if (+route.params['id'] > 0) {
+      const join = forkJoin([
+        this.dataService.getGroup(route.params['id']),
+        this.dataService.getExpenses(),
+        this.dataService.getPayers(),
+        this.dataService.getPayees()
+      ]).pipe(map((results) => {
+        return {
+          group: results[0],
+          expenses: results[1],
+          payers: results[2],
+          payees: results[3]
+        };
+      }));
+      return join;
+    } else {
+      const join = forkJoin([
+        this.dataService.getFriends(1),
+        this.dataService.getUser(1)
+      ]).pipe(map((results) => {
+        return {
+          friends: results[0],
+          currentUser: results[1]
+        };
+      }));
+      return join;
+    }
   }
 }

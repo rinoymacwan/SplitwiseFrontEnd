@@ -150,9 +150,12 @@ export class DashboardComponent implements OnInit {
     this.owedPayments = this.owedPayments.filter(k => k.from !== k.to);
     for (const pay of this.owesPayments) {
       this.owesTab.push('You owe ' + pay.fromName + ' Rs. ' + pay.amount);
+      this.totalOwes += pay.amount;
     }
     for (const pay of this.owedPayments) {
       this.owedTab.push(pay.toName + ' owes You Rs. ' + pay.amount);
+      this.totalOwed += pay.amount;
     }
+    this.grandTotal = this.totalOwed - this.totalOwes;
   }
 }

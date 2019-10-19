@@ -10,7 +10,9 @@
     </div>
   </div>
   <hr>
-
+  <button class="btn btn-link" style="position: absolute; right: 0;" (click)="onClear()">Clear activities</button>
+  <br>
+  <br>
   <ul class="list-group">
     <li *ngFor='let activity of activities' class="list-group-item">{{activity.description}}</li>
   </ul>

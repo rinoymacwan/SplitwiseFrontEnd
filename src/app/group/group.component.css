@@ -22,3 +22,13 @@ hr {
 .owed{
   color: green;
 }
+
+input{
+  border-left: none;
+  border-top: none;
+  border-right: none;
+}
+
+label {
+  margin-top: 5px;
+}
