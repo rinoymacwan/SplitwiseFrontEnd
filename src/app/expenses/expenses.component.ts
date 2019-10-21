@@ -31,12 +31,10 @@ export class ExpensesComponent implements OnInit {
   categories: Category[];
   selectedFriend: User;
   expenseBetween: User[];
-  isPartOfExpense: boolean[];
   isIndividual: boolean;
   flag: boolean;
   selectedUsers: User[];
   currentUser: User;
-  selectedShares: number[];
   equalShare: number[];
   percentageShare: number[];
   selectedFriendShare: number;
@@ -47,51 +45,58 @@ export class ExpensesComponent implements OnInit {
   notes: boolean;
   activity: Activity;
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
+    // common
     this.expense = new Expense();
     this.flag = false;
+    const x = this.route.snapshot.data.resolvedData;
+    this.notes = false;
+    this.activity = new Activity();
+    this.isIndividual = true;
+    const param = this.route.snapshot.paramMap.get('id');
+    this.userId = 1;
+
+    // individual
     this.payer = new Payer();
     this.payee = new Payee();
+
+    // group
     this.payers = [];
     this.payees = [];
-    const x = this.route.snapshot.data.resolvedData;
+
     this.friends = x.friends;
     this.expenseBetween = this.friends;
     this.groups = x.groups;
     this.categories = x.categories;
     this.currentUser = x.user;
     this.paidBy = this.friends;
-    this.userId = 1;
+
     this.selectedFriend = new User();
     this.selectedFriendShare = 0;
-    this.isIndividual = true;
+
     this.selectedUsers = [];
-    this.selectedShares = Array.apply(null, new Array(10)).map(() => 0);
     this.equalShare = [];
     this.percentageShare = [];
     this.myShare = 0;
     this.finalMyShare = 0;
     this.finalSelectedFriendShare = 0;
-    this.notes = false;
-    this.activity = new Activity();
-    // console.log(JSON.stringify(this.friends));
-    // console.log(JSON.stringify(this.groups));
-    const param = this.route.snapshot.paramMap.get('id');
+
+
     if (+param === 0) {
-      console.log("NEW EXPENSE");
+      console.log('NEW EXPENSE');
       this.newExpense = true;
     } else {
       this.newExpense = false;
       this.expense = x.expense;
       this.payers = x.payers;
       this.payees = x.payees;
-      this.payer = this.payers.find(k => this.expense.id === k.expenseId );
+      this.payer = this.payers.find(k => this.expense.id === k.expenseId);
       this.payees = this.payees.filter(k => k.expenseId === this.expense.id);
     }
   }
   ngOnInit() {
   }
   async loadPaid() {
-    console.log(this.expense.groupId);
+    // console.log(this.expense.groupId);
     this.equalShare = [];
     if (this.expense.groupId !== undefined && this.expense.groupId > 0) {
       await this.dataService.getGroupMembers(this.expense.groupId).then(
@@ -108,43 +113,44 @@ export class ExpensesComponent implements OnInit {
     }
   }
   async onSubmit(form: NgForm) {
-    console.log("form submit");
+    console.log('form submit');
     this.expense.addedById = this.userId;
+    await this.dataService.AddExpense(this.expense).then(
+      k => {
+        this.expense = k;
+      }
+    );
+    console.log('expense:');
     console.log(JSON.stringify(this.expense));
-    if (this.isIndividual === true) {
-      await this.dataService.AddExpense(this.expense).then(
-        k => {
-          this.expense = k;
-        }
-      );
-    } else {
-      await this.dataService.AddExpense(this.expense).then(
-        k => {
-          this.expense = k;
-        }
-      );
-    }
 
-    if (this.isIndividual === true) { // individual expenses
-      // individual payer
+    if (this.isIndividual === true) {
+      // individual expenses
+      // commmon
+
       this.payer.expenseId = this.expense.id;
       this.payee.expenseId = this.expense.id;
       this.payer.amountPaid = this.expense.total;
+      console.log('USERID: ' + this.userId);
+      console.log('PAYERID: ' + this.payer.payerId);
+      console.log('PAYEEID: ' + this.payee.payeeId);
+
+      // I Paid
       if (+this.payer.payerId === +this.userId) {
         this.payer.payerShare = this.finalMyShare;
         this.payee.payeeId = this.selectedFriend.id;
         this.payee.payeeShare = this.finalSelectedFriendShare;
-        console.log("I paid");
+        console.log('I paid');
       } else {
+        // Other Guy Paid
         this.payer.payerShare = this.finalSelectedFriendShare;
         this.payee.payeeId = this.userId;
         this.payee.payeeShare = this.finalMyShare;
-        console.log("Other paid");
+        console.log('Other guy paid');
       }
-      console.log("AAAAAAAAAAAAAA");
+      console.log('PAYER:');
       console.log(JSON.stringify(this.payer));
       this.dataService.AddPayer(this.payer);
-
+      console.log('PAYEE:');
       console.log(JSON.stringify(this.payee));
       this.dataService.AddPayee(this.payee);
       // tslint:disable-next-line: max-line-length
@@ -155,7 +161,7 @@ export class ExpensesComponent implements OnInit {
       this.payer.amountPaid = this.expense.total;
       this.payer.payerShare = this.equalShare[this.payer.payerId];
       this.dataService.AddPayer(this.payer);
-      for ( const x of this.selectedUsers) {
+      for (const x of this.selectedUsers) {
         this.payee.expenseId = this.expense.id;
         this.payee.payeeId = x.id;
         this.payee.payeeShare = this.equalShare[x.id];
@@ -202,7 +208,7 @@ export class ExpensesComponent implements OnInit {
     this.notes = !this.notes;
   }
   async delete() {
-    if(confirm('Are you sure you want to delete this expense?')) {
+    if (confirm('Are you sure you want to delete this expense?')) {
       await this.dataService.deleteExpense(this.expense);
       this.router.navigate([''], { state: { msg: 'Expense deleted.' } });
     }
@@ -231,7 +237,6 @@ export class ExpensesComponent implements OnInit {
           this.equalShare[x.id] = this.expense.total / numberOfMembers;
         }
         console.log(this.equalShare);
-        console.log(this.selectedShares);
       } else if (this.expense.splitBy === 'by percentage') {
         this.percentageShare = [];
         for (const x of this.selectedUsers) {
@@ -241,5 +246,8 @@ export class ExpensesComponent implements OnInit {
       } else if (this.expense.splitBy === 'unequally') {
       }
     }
+  }
+  onPaidByChange() {
+    console.log(this.payer.payerId);
   }
 }

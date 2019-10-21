@@ -33,6 +33,7 @@ export class GroupComponent implements OnInit {
   currentUser: User;
   constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
     const x = this.route.snapshot.data.resolvedData;
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.userId = 1;
     this.groupId = +this.route.snapshot.paramMap.get('id');
     if (this.groupId > 0) {

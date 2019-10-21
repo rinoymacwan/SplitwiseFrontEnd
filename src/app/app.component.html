@@ -4,17 +4,34 @@
     <br>
     <br>
     <ul>
-      <li><a [routerLink]="['/dashboard']">Dashboard</a></li>
-      <li><a [routerLink]="['/activity']">Activity</a></li>
-      <li><a [routerLink]="['/allexpenses']">All Expenses</a></li>
-      <li><a [routerLink]="['/groups']">Groups</a></li>
-      <li>
-        <a [routerLink]="['/friends']">Friends</a></li>
+      <a [routerLink]="['/dashboard']">
+        <li>Dashboard</li>
+      </a>
+      <a [routerLink]="['/activity']">
+        <li>Activity</li>
+      </a>
+      <a [routerLink]="['/allexpenses']">
+        <li>All Expenses</li>
+      </a>
+      <a [routerLink]="['/groups']">
+        <li>Groups</li>
+      </a>
+      <a *ngFor='let group of groups' [routerLink]="['/group', group.id]" routerLinkActive="router-link-active">
+        <li><i class="material-icons">
+            people
+          </i>{{group.name}}</li>
+      </a>
 
-      <li *ngFor='let friend of friends'>
-        <i class="fas fa-user"></i>
-        <a [routerLink]="['/friend',friend.id]">{{friend.name}}</a>
-      </li>
+      <a [routerLink]="['/friends']">
+        <li>Friends</li>
+      </a>
+
+      <a *ngFor='let friend of friends' [routerLink]="['/friend', friend.id]" routerLinkActive="router-link-active">
+        <li><i class="material-icons">
+            person
+          </i>{{friend.name}}</li>
+      </a>
+
 
     </ul>
   </nav>

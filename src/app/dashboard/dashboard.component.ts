@@ -27,6 +27,8 @@ export class DashboardComponent implements OnInit {
   payments: Payment[];
   owesPayments: Payment[];
   owedPayments: Payment[];
+  finalOwesPayments: Payment[];
+  finalOwedPayments: Payment[];
   fixedPayments: Payment[];
   totalOwes: number;
   totalOwed: number;
@@ -47,6 +49,8 @@ export class DashboardComponent implements OnInit {
     this.payments = [];
     this.owesPayments = [];
     this.owedPayments = [];
+    this.finalOwesPayments = [];
+    this.finalOwedPayments = [];
     this.fixedPayments = [];
     this.totalOwed = 0;
     this.totalOwes = 0;
@@ -114,7 +118,7 @@ export class DashboardComponent implements OnInit {
       const expense = this.expenses.find(k => k.id === payee.expenseId);
       const existingPayment = this.owesPayments.find(k => k.from === payer.payerId && k.to === payee.payeeId);
       if (existingPayment !== undefined) {
-        console.log("exists");
+        // console.log("exists");
         existingPayment.amount += payee.payeeShare;
       } else {
         // tslint:disable-next-line: max-line-length
@@ -129,7 +133,7 @@ export class DashboardComponent implements OnInit {
         const expense = this.expenses.find(k => k.id === payer.expenseId);
         const existingPayment = this.owedPayments.find(k => k.from === payer.payerId && k.to === payee.payeeId);
         if (existingPayment !== undefined) {
-          console.log("exists");
+          // console.log("exists");
           existingPayment.amount += payee.payeeShare;
         } else {
           // tslint:disable-next-line: max-line-length
@@ -144,18 +148,53 @@ export class DashboardComponent implements OnInit {
       // }
 
     }
-    console.log(this.owesPayments);
-    console.log(this.owedPayments);
+    // console.log(this.owesPayments);
+    // console.log(this.owedPayments);
     this.owesPayments = this.owesPayments.filter(k => k.from !== k.to);
     this.owedPayments = this.owedPayments.filter(k => k.from !== k.to);
+
+    // owes and owed differently. difference not calculated
+
+    // for (const pay of this.owesPayments) {
+    //   this.owesTab.push('You owe ' + pay.fromName + ' Rs. ' + pay.amount);
+    //   this.totalOwes += pay.amount;
+    // }
+    // for (const pay of this.owedPayments) {
+    //   this.owedTab.push(pay.toName + ' owes You Rs. ' + pay.amount);
+    //   this.totalOwed += pay.amount;
+    // }
+
+
+    // owes payments owed payments
     for (const pay of this.owesPayments) {
-      this.owesTab.push('You owe ' + pay.fromName + ' Rs. ' + pay.amount);
-      this.totalOwes += pay.amount;
+      const x = this.owedPayments.find(k => k.from === pay.to && k.to === pay.from );
+      if (x !== undefined) {
+        const diff = x.amount - pay.amount;
+        if ( diff > 0 ) {
+          x.amount = diff;
+          pay.amount = 0;
+          // he owes me more
+        } else {
+          // i owe him more
+          pay.amount = diff * -1;
+          x.amount = 0;
+        }
+      }
+    }
+
+    for (const pay of this.owesPayments) {
+      if (pay.amount !== 0) {
+        this.owesTab.push('You owe ' + pay.fromName + ' Rs. ' + pay.amount);
+        this.totalOwes += pay.amount;
+      }
     }
     for (const pay of this.owedPayments) {
-      this.owedTab.push(pay.toName + ' owes You Rs. ' + pay.amount);
-      this.totalOwed += pay.amount;
+      if (pay.amount !== 0) {
+        this.owedTab.push(pay.toName + ' owes You Rs. ' + pay.amount);
+        this.totalOwed += pay.amount;
+      }
     }
     this.grandTotal = this.totalOwed - this.totalOwes;
+
   }
 }
