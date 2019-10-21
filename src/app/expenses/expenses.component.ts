@@ -202,8 +202,10 @@ export class ExpensesComponent implements OnInit {
     this.notes = !this.notes;
   }
   async delete() {
-    await this.dataService.deleteExpense(this.expense);
-    this.router.navigate([''], { state: { msg: 'Expense deleted.' } });
+    if(confirm('Are you sure you want to delete this expense?')) {
+      await this.dataService.deleteExpense(this.expense);
+      this.router.navigate([''], { state: { msg: 'Expense deleted.' } });
+    }
   }
   onSplit() {
     // console.log(this.expense.splitBy);

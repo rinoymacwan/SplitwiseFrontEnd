@@ -6,6 +6,10 @@ import { Expense } from '../models/expense';
 import { Payee } from '../models/payee';
 import { Payer } from '../models/payer';
 import { Payment } from '../models/payment';
+import { NgForOf } from '@angular/common';
+import { NgForm } from '@angular/forms';
+import { DataService } from '../data.service';
+import { GroupMemberMapping } from '../models/group-member-mapping';
 
 @Component({
   selector: 'app-group',
@@ -27,7 +31,7 @@ export class GroupComponent implements OnInit {
   isNew: boolean;
   friends: User[];
   currentUser: User;
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
     const x = this.route.snapshot.data.resolvedData;
     this.userId = 1;
     this.groupId = +this.route.snapshot.paramMap.get('id');
@@ -43,13 +47,15 @@ export class GroupComponent implements OnInit {
       this.isNew = true;
       this.friends = x.friends;
       this.currentUser = x.currentUser;
+      this.members = [];
+      this.members.push(this.currentUser);
+      this.group = new Group();
     }
     console.log(this.isNew);
     // console.log(JSON.stringify(this.group));
     // console.log(JSON.stringify(this.members));
     this.payments = [];
-    this.members = [];
-    this.members.push(this.currentUser);
+    this.group.madeById = this.userId;
   }
 
   ngOnInit() {
@@ -84,5 +90,22 @@ export class GroupComponent implements OnInit {
       this.members = this.members.filter(k => k !== x);
     }
     console.log(JSON.stringify(this.members));
+  }
+
+  async onSubmit(form: NgForm) {
+    console.log("Adding new group!");
+    console.log(this.group);
+    await this.dataService.addGroup(this.group).then(
+      k => {
+        this.group = k;
+      }
+    );
+    const groupMemberMapping = new GroupMemberMapping();
+    groupMemberMapping.groupId = this.group.id;
+    for (let x of this.members) {
+      groupMemberMapping.memberId = x.id;
+      await this.dataService.addGroupMemberMapping(groupMemberMapping);
+    }
+    this.router.navigate(['groups'], { state: { msg: 'Group added.'}});
   }
 }

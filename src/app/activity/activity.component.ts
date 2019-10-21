@@ -24,7 +24,9 @@ export class ActivityComponent implements OnInit {
     // console.log(JSON.stringify(this.activities));
   }
   async onClear() {
-    this.activities = [];
-    await this.dataService.clearActivities(this.userId);
+    if (confirm('Are you sure you want to clear all activities?')) {
+      this.activities = [];
+      await this.dataService.clearActivities(this.userId);
+    }
   }
 }

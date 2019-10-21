@@ -9,6 +9,7 @@ import { Group } from './models/group';
 import { User } from './models/user';
 import { Settlement } from './models/settlement';
 import { Category } from './models/category';
+import { GroupMemberMapping } from './models/group-member-mapping';
 
 @Injectable({
   providedIn: 'root'
@@ -95,6 +96,12 @@ export class DataService {
   }
   async addActivity(activity: Activity) {
     await this.http.post('http://localhost:6700/api/Activities', activity).toPromise();
+  }
+  async addGroup(group: Group): Promise<Group> {
+    return await this.http.post<Group>('http://localhost:6700/api/Groups', group).toPromise();
+  }
+  async addGroupMemberMapping(groupMemberMapping: GroupMemberMapping) {
+    await this.http.post('http://localhost:6700/api/GroupMemberMappings', groupMemberMapping).toPromise();
   }
   getExpense(id: number): Observable<Expense>{
     return this.http.get<Expense>('http://localhost:6700/api/Expenses/' + id);
