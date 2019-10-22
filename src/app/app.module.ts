@@ -17,6 +17,7 @@ import { SettleUpComponent } from './settle-up/settle-up.component';
 import { MatIconRegistry, MatIconModule } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     GroupsComponent,
     FriendComponent,
     GroupComponent,
-    SettleUpComponent
+    SettleUpComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

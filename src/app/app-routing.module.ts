@@ -20,6 +20,7 @@ import { FriendResolver } from './resolvers/friend-resolver.service';
 import { AddEditExpensesResolver } from './resolvers/add-edit-expenses-resolver.service';
 import { SettleUpComponent } from './settle-up/settle-up.component';
 import { SettleUpResolver } from './resolvers/settle-up-resolver.service';
+import { LoginComponent } from './login/login.component';
 
 
 const routes: Routes = [
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: FriendResolver} },
   { path: 'expenses/:id', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver} },
   { path: 'settleup', component: SettleUpComponent, resolve: {resolvedData: SettleUpResolver} },
+  { path: 'login', component: LoginComponent },
   { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
 ];
 
