@@ -109,6 +109,9 @@ export class DataService {
   async deleteExpense(expense: Expense): Promise<Expense> {
     return await this.http.delete<Expense>('http://localhost:6700/api/Expenses/' + expense.id).toPromise();
   }
+  async deleteSettlement(id: number): Promise<any> {
+    return await this.http.delete<any>('http://localhost:6700/api/Settlements/' + id).toPromise();
+  }
   async clearActivities(userId: number) {
     return await this.http.delete('http://localhost:6700/api/Activities/ByUserId/' + userId).toPromise();
   }

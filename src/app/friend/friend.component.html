@@ -32,6 +32,7 @@
     <div class="row">
       <div class="col-2">{{settlement.dateTime | date: 'dd/MM/yyyy'}}</div>
       <div class="col-8">{{settlement.payer.name}} paid {{settlement.amount}} to {{settlement.payee.name}}</div>
+      <div class="col-2"><button class="btn btn-danger" (click)="deleteSettlement(settlement.id)">delete</button></div>
     </div>
   </li>
 </ul>

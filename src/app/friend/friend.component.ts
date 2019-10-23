@@ -6,6 +6,7 @@ import { Settlement } from '../models/settlement';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Payment } from '../models/payment';
 import { User } from '../models/user';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-friend',
@@ -32,7 +33,7 @@ export class FriendComponent implements OnInit {
   grandTotal: number;
   sign: string;
   expense: Expense;
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
     const x = this.route.snapshot.data.resolvedData;
     this.expenses = x.expenses;
     this.payers = x.payers;
@@ -84,6 +85,13 @@ export class FriendComponent implements OnInit {
       return new Date(a.date).getTime() - new Date(b.date).getTime();
 
   });
+  }
+
+  async deleteSettlement(id: number) {
+    if (confirm('Are you sure you want to delete this settlement?')) {
+      await this.dataService.deleteSettlement(id);
+      this.router.navigate(['friend', this.friendId], { state: { msg: 'Settlement deleted.' } });
+    }
   }
 
 }
