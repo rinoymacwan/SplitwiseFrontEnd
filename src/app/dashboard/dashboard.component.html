@@ -37,6 +37,7 @@
   </div>
 </div>
 <hr>
+<!-- without settlements
 <div class="row centre-col">
   <div class="col-6">
     <label>you owe</label>
@@ -48,6 +49,25 @@
     <label>you are owed</label>
     <ul class="list-group">
       <li *ngFor='let owed of owedTab' class="list-group-item owed">{{owed}}</li>
+    </ul>
+  </div>
+</div>
+
+<ul class="list-group">
+  <li *ngFor='let settle of settlements' class="list-group-item">{{settle.payer.name}} paid Rs. {{settle.amount}} to {{settle.payee.name}}</li>
+</ul>
+-->
+<div class="row centre-col">
+  <div class="col-6">
+    <label>you owe</label>
+    <ul class="list-group">
+      <li *ngFor='let owe of finalOwesTab' class="list-group-item owe">{{owe}}</li>
+    </ul>
+  </div>
+  <div class="col-6">
+    <label>you are owed</label>
+    <ul class="list-group">
+      <li *ngFor='let owed of finalOwedTab' class="list-group-item owed">{{owed}}</li>
     </ul>
   </div>
 </div>

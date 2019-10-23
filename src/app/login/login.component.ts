@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,8 @@ import { AuthenticationService } from '../authentication.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private authenticationService: AuthenticationService) { }
+  // tslint:disable-next-line: max-line-length
+  constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -18,6 +20,7 @@ export class LoginComponent implements OnInit {
     const x = this.authenticationService.login('rinoy@promactinfo.com', 'tvsgold').then(
       k => {
         console.log(k);
+        this.router.navigate([{ outlets: { master: ['home'] } }]);
       }
     );
   }

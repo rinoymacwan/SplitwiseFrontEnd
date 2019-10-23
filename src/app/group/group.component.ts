@@ -70,10 +70,10 @@ export class GroupComponent implements OnInit {
         // console.log(JSON.stringify(this.payee));
         if (this.payee === undefined) {
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(expense.description, this.payer.payerId, "You", 0, "", this.payer.amountPaid, this.payer.amountPaid, expense.dateTime));
+          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, "You", 0, "", this.payer.amountPaid, this.payer.amountPaid, expense.dateTime));
         } else {
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(expense.description, this.payer.payerId, this.payer.user.name, this.payee.payeeId, "You", this.payer.amountPaid, this.payee.payeeShare, expense.dateTime));
+          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, this.payer.user.name, this.payee.payeeId, "You", this.payer.amountPaid, this.payee.payeeShare, expense.dateTime));
         }
       }
     }

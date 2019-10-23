@@ -155,7 +155,7 @@
         <div class="col-md-6">
           <div class="form-group row">
             <div class="col-md-2">
-              <button type="button" class="btn btn-secondary">Cancel</button>
+              <a [routerLink]="['/dashboard']" routerLinkActive="router-link-active" ><button type="button" class="btn btn-secondary">Cancel</button></a>
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-2">
@@ -172,7 +172,7 @@
 <div *ngIf="this.newExpense == false">
 
   <h3>{{this.expense.description}}</h3>
-  added by userId : {{this.expense.addedById}} on {{this.expense.dateTime | date: 'dd/MM/yyyy'}}
+  added by <b>{{addedByName}}</b> on {{this.expense.dateTime | date: 'dd/MM/yyyy'}}
   <br>
   <br>
   {{this.payer.user.name}} paid {{this.payer.amountPaid}} and owes {{this.payer.payerShare}}.

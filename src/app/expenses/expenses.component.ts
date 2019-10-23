@@ -44,6 +44,7 @@ export class ExpensesComponent implements OnInit {
   newExpense: boolean;
   notes: boolean;
   activity: Activity;
+  addedByName: string;
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     // common
     this.expense = new Expense();
@@ -91,6 +92,12 @@ export class ExpensesComponent implements OnInit {
       this.payees = x.payees;
       this.payer = this.payers.find(k => this.expense.id === k.expenseId);
       this.payees = this.payees.filter(k => k.expenseId === this.expense.id);
+      const temp = this.friends.find(k => k.id === this.expense.addedById);
+      if (temp === undefined) {
+        this.addedByName = 'You';
+      } else {
+        this.addedByName = temp.name;
+      }
     }
   }
   ngOnInit() {

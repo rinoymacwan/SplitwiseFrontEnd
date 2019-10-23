@@ -52,3 +52,36 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
+// const routes: Routes = [
+//   // tslint:disable-next-line: max-line-length
+
+//   { path: 'login', component: LoginComponent, outlet: 'master' },
+//   {
+//     path: 'home', component: HomeComponent, outlet: 'master',
+//     children: [
+//       // tslint:disable-next-line: max-line-length
+//       { path: 'dashboard', component: DashboardComponent, outlet: 'sub', resolve: { resolvedData: DashboardResolver }, runGuardsAndResolvers: 'always' },
+//       { path: 'activity', component: ActivityComponent, outlet: 'sub', resolve: { resolvedData: ActivitiesResolver } },
+//       {
+//         path: 'allexpenses',
+//         component: AllExpensesComponent,
+//         outlet: 'sub',
+//         resolve: {
+//           resolvedExpenses: ExpensesResolver,
+//           resolvedPayers: PayersResolver,
+//           resolvedPayees: PayeesResolver
+//         }
+//       },
+//       { path: 'groups', component: GroupsComponent, outlet: 'sub', resolve: { resolvedData: GroupsResolver } },
+//       { path: 'group/:id', component: GroupComponent, outlet: 'sub', resolve: { resolvedData: GroupResolver } },
+//       { path: 'friends', component: FriendsComponent, outlet: 'sub', resolve: { resolvedData: FriendsResolver } },
+//       { path: 'friend/:id', component: FriendComponent, outlet: 'sub', resolve: { resolvedData: FriendResolver } },
+//       { path: 'expenses/:id', component: ExpensesComponent, outlet: 'sub', resolve: { resolvedData: AddEditExpensesResolver } },
+//       { path: 'settleup', component: SettleUpComponent, outlet: 'sub', resolve: { resolvedData: SettleUpResolver } },
+//       // tslint:disable-next-line: max-line-length
+//       { path: '', component: DashboardComponent, outlet: 'sub', resolve: { resolvedData: DashboardResolver }, runGuardsAndResolvers: 'always' },
+//     ]
+//   },
+//   { path: '', component: LoginComponent, outlet: 'master', }
+// ];

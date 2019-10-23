@@ -41,6 +41,7 @@ export class FriendComponent implements OnInit {
     this.friend = x.friend;
     this.userId = 1;
     this.friendId = +this.route.snapshot.paramMap.get('id');
+    this.settlements = this.settlements.filter(k => k.payeeId === this.friendId || k.payerId === this.friendId);
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.owedTab = [];
     this.owesTab = [];
@@ -63,9 +64,9 @@ export class FriendComponent implements OnInit {
       for (const x of y) {
         this.expense = this.expenses.find(k => k.id === x.expenseId);
         // tslint:disable-next-line: max-line-length
-        this.AllOwedTab.push(this.expense.description + ' | You paid Rs. ' + owed.payerShare + ' | You lent ' + x.user.name + ' Rs.' + x.payeeShare);
+        this.AllOwedTab.push(this.expense.description + ' | You paid Rs. ' + owed.amountPaid + ' | You lent ' + x.user.name + ' Rs.' + x.payeeShare);
         // tslint:disable-next-line: max-line-length
-        this.payments.push(new Payment(this.expense.description, this.userId, 'You', this.friendId, x.user.name, owed.payerShare, x.payeeShare, this.expense.dateTime));
+        this.payments.push(new Payment(this.expense.id, this.expense.description, this.userId, 'You', this.friendId, x.user.name, owed.amountPaid, x.payeeShare, this.expense.dateTime));
       }
     }
 
@@ -76,7 +77,7 @@ export class FriendComponent implements OnInit {
         // tslint:disable-next-line: max-line-length
         this.AllOwesTab.push( this.expense.description + ' | ' + x.user.name + ' paid ' + x.amountPaid + ' | ' + x.user.name + ' lent you ' + owes.payeeShare);
         // tslint:disable-next-line: max-line-length
-        this.payments.push(new Payment(this.expense.description, x.user.id, x.user.name, this.userId, 'You', x.amountPaid, owes.payeeShare, this.expense.dateTime));
+        this.payments.push(new Payment(this.expense.id, this.expense.description, x.user.id, x.user.name, this.userId, 'You', x.amountPaid, owes.payeeShare, this.expense.dateTime));
       }
     }
     this.payments.sort((a: Payment, b: Payment) => {
