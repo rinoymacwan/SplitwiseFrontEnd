@@ -16,13 +16,15 @@ export class GroupResolver implements Resolve<any> {
         this.dataService.getGroup(route.params['id']),
         this.dataService.getExpenses(),
         this.dataService.getPayers(),
-        this.dataService.getPayees()
+        this.dataService.getPayees(),
+        this.dataService.getUser(1)
       ]).pipe(map((results) => {
         return {
           group: results[0],
           expenses: results[1],
           payers: results[2],
-          payees: results[3]
+          payees: results[3],
+          currentUser: results[4]
         };
       }));
       return join;

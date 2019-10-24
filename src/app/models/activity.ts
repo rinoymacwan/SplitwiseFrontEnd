@@ -3,4 +3,12 @@ export class Activity {
   userId: number;
   description: string;
   dateTime: Date;
+  /**
+   *
+   */
+  constructor(userId: number, description: string, dateTime: Date) {
+    this.userId = userId;
+    this.description = description;
+    this.dateTime = dateTime;
+  }
 }

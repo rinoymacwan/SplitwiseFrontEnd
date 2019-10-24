@@ -51,7 +51,7 @@ export class ExpensesComponent implements OnInit {
     this.flag = false;
     const x = this.route.snapshot.data.resolvedData;
     this.notes = false;
-    this.activity = new Activity();
+    this.activity = new Activity(0, '', new Date(Date.now()));
     this.isIndividual = true;
     const param = this.route.snapshot.paramMap.get('id');
     this.userId = 1;

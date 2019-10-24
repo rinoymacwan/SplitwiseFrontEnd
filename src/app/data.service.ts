@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Activity } from './models/activity';
 import { Observable } from 'rxjs';
 import { Expense } from './models/expense';
@@ -112,8 +112,24 @@ export class DataService {
   async deleteSettlement(id: number): Promise<any> {
     return await this.http.delete<any>('http://localhost:6700/api/Settlements/' + id).toPromise();
   }
+  async deleteFriend(removeList: User[]): Promise<any> {
+    const httpParams = new HttpParams().set('aaa', '111');
+    httpParams.set('userId', removeList[0].id.toString());
+    httpParams.set('friendId', removeList[1].id.toString());
+    const options = { params: httpParams };
+    return await this.http.delete<any>('http://localhost:6700/api/UserFriendMappings', options).toPromise();
+  }
   async clearActivities(userId: number) {
     return await this.http.delete('http://localhost:6700/api/Activities/ByUserId/' + userId).toPromise();
+  }
+  async deleteGroup(id: number): Promise<Group> {
+    return await this.http.delete<Group>('http://localhost:6700/api/Groups/' + id).toPromise();
+  }
+  async addFriend(email: string, userId: number): Promise<boolean> {
+    // tslint:disable-next-line: max-line-length
+    const x = new User();
+    x.email = email;
+    return await this.http.post<boolean>('http://localhost:6700/api/UserFriendMappings/ByEmail/' + userId, x).toPromise();
   }
 }
 

@@ -1,13 +1,55 @@
-<div class="row">
+<div *ngIf="isNew === true">
+    <div class="row">
+        <div class="col-7">
+          <h2>Add a new Friend</h2>
+        </div>
+      </div>
+      <hr>
+      <form class="form-horizontal" #myForm="ngForm" class="myForm" (ngSubmit)="addFriend()" ngNativeValidate>
+          <div class="form-group">
+              <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                  <div class="form-group row">
+                    <label for="email" class="control-label col-md-2">email:</label>
+                    <div class="col-md-6">
+                      <input class="form-control" name="email" id="email" [(ngModel)]="this.email" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-10">
+                    <div class="form-group row">
+                      <label for="x" class="control-label col-md-2"></label>
+                      <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          </div>
+
+      </form>
+      <div *ngIf="this.doesntExist === true" class="alert alert-danger" role="alert">User with the given email does not exist.</div>
+</div>
+<div *ngIf="isNew === false">
+  <div class="row">
   <div class="col-7">
     <h2>{{this.friend.name}}</h2>
   </div>
   <div class="col-2.5">
-    <a [routerLink]="['/expenses', 0]"><button class="btn btn-primary expenseButton">Add an expense</button></a>
+    <a [routerLink]="['/expenses', 0]"><button type="button" class="btn btn-primary expenseButton">Add an expense</button></a>
   </div>
   <div class="col-2">
-      <a [routerLink]="['/settleup']"><button class="btn btn-primary settleUp">Settle up</button></a>
+      <a [routerLink]="['/settleup']"><button type="button" class="btn btn-primary settleUp">Settle up</button></a>
   </div>
+  <div>
+      <button class="btn btn-primary right" (click)="deleteFriend()" >Remove Friend</button>
+    </div>
+
 </div>
 <hr>
 <b>Expenses</b>
@@ -32,7 +74,8 @@
     <div class="row">
       <div class="col-2">{{settlement.dateTime | date: 'dd/MM/yyyy'}}</div>
       <div class="col-8">{{settlement.payer.name}} paid {{settlement.amount}} to {{settlement.payee.name}}</div>
-      <div class="col-2"><button class="btn btn-danger" (click)="deleteSettlement(settlement.id)">delete</button></div>
+      <div class="col-2"><button type="button"class="btn btn-danger" (click)="deleteSettlement(settlement.id)">delete</button></div>
     </div>
   </li>
 </ul>
+</div>

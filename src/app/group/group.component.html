@@ -9,10 +9,17 @@
     <div class="col-2">
       <a [routerLink]="['/settleup']"><button class="btn btn-primary settleUp">Settle up</button></a>
     </div>
+    <div>
+        <button class="btn btn-primary right" (click)="onDelete()" >Delete Group</button>
+      </div>
   </div>
   <hr>
+<div class="row">
+  <div class="col-2">
+    <h4>Members</h4>
+  </div>
+</div>
 
-  <h4>Members</h4>
   <hr>
   <ul class="list-group">
     <li class="list-group-item"><a [routerLink]="['/dashboard']">You</a></li>
@@ -81,3 +88,4 @@
   </form>>
 
 </div>
+

@@ -19,7 +19,7 @@ export class SettleUpComponent implements OnInit {
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     this.friends = [];
     this.userId = 1;
-    this.activity = new Activity();
+    this.activity = new Activity(0, '', new Date(Date.now()));
     this.settlement = new Settlement();
     this.friends = this.route.snapshot.data.resolvedData.friends;
     this.friends.push(this.route.snapshot.data.resolvedData.user);
@@ -35,7 +35,8 @@ export class SettleUpComponent implements OnInit {
     this.activity.description =  payerName + ' paid Rs.' + this.settlement.amount + ' to ' + payeeName;
     console.log(this.activity.description);
     this.dataService.addSettlement(this.settlement);
-    this.dataService.addActivity(this.activity);
+    // tslint:disable-next-line: max-line-length
+    this.dataService.addActivity(new Activity(this.userId, payerName + ' paid Rs.' + this.settlement.amount + ' to ' + payeeName, this.settlement.dateTime ));
     this.router.navigate([''], { state: { msg: 'Settlement added.' } });
 
   }

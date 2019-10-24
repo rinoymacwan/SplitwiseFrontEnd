@@ -21,21 +21,29 @@ export class FriendResolver implements Resolve<any> {
     this.userId = 1;
   }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    const join = forkJoin([
-      this.dataService.getExpenses(),
-      this.dataService.getPayers(),
-      this.dataService.getPayees(),
-      this.dataService.getSettlementsByUserId(this.userId),
-      this.dataService.getUser(route.params['id'])
-    ]).pipe(map((results) => {
-      return {
-        expenses: results[0],
-        payers: results[1],
-        payees: results[2],
-        settlements: results[3],
-        friend: results[4]
-      };
-    }));
-    return join;
+    if (+route.params['id'] === 0) {
+
+    } else {
+        const join = forkJoin([
+        this.dataService.getExpenses(),
+        this.dataService.getPayers(),
+        this.dataService.getPayees(),
+        this.dataService.getSettlementsByUserId(this.userId),
+        this.dataService.getUser(route.params['id']),
+        this.dataService.getUser(1)
+      ]).pipe(map((results) => {
+        return {
+          expenses: results[0],
+          payers: results[1],
+          payees: results[2],
+          settlements: results[3],
+          friend: results[4],
+          currentUser: results[5]
+        };
+      }));
+        return join;
+
+    }
+
   }
 }

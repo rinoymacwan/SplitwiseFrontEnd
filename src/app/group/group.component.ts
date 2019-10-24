@@ -10,6 +10,7 @@ import { NgForOf } from '@angular/common';
 import { NgForm } from '@angular/forms';
 import { DataService } from '../data.service';
 import { GroupMemberMapping } from '../models/group-member-mapping';
+import { Activity } from '../models/activity';
 
 @Component({
   selector: 'app-group',
@@ -44,6 +45,7 @@ export class GroupComponent implements OnInit {
       this.group = x.group.group;
       this.members = x.group.members;
       this.members = this.members.filter(k => k.id !== this.userId);
+      this.currentUser = x.currentUser;
     } else {
       this.isNew = true;
       this.friends = x.friends;
@@ -103,10 +105,18 @@ export class GroupComponent implements OnInit {
     );
     const groupMemberMapping = new GroupMemberMapping();
     groupMemberMapping.groupId = this.group.id;
-    for (let x of this.members) {
+    for (const x of this.members) {
       groupMemberMapping.memberId = x.id;
       await this.dataService.addGroupMemberMapping(groupMemberMapping);
     }
     this.router.navigate(['groups'], { state: { msg: 'Group added.'}});
+  }
+  async onDelete() {
+    if (confirm('Are you sure you want to delete this group and all its expenses?')) {
+      // tslint:disable-next-line: max-line-length
+      this.dataService.addActivity(new Activity(this.userId, this.currentUser.name + ' deletd ' + this.group.name + ' group.', new Date(Date.now())));
+      await this.dataService.deleteGroup(this.groupId);
+      this.router.navigate(['groups'], { state: { msg: 'Group deleted.'}});
+    }
   }
 }

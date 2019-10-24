@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Expense } from '../models/expense';
 import { Payer } from '../models/payer';
 import { Payee } from '../models/payee';
@@ -36,9 +36,18 @@ export class DashboardComponent implements OnInit {
   totalOwed: number;
   grandTotal: number;
   sign: string;
-  constructor(private dataService: DataService, private route: ActivatedRoute) {
+  msgExists: boolean;
+  msg: string;
+  constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     // this.expenses = this.route.snapshot.data.resolvedData.expenses;
     const x = this.route.snapshot.data.resolvedData;
+    // tslint:disable-next-line: no-non-null-assertion
+    if (this.router.getCurrentNavigation().extras.state !== undefined) {
+      this.msg = this.router.getCurrentNavigation().extras.state.msg;
+      this.msgExists = true;
+    } else {
+      this.msgExists = false;
+    }
     this.expenses = x.expenses;
     this.payers = x.payers;
     this.payees = x.payees;
