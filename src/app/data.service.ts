@@ -113,11 +113,8 @@ export class DataService {
     return await this.http.delete<any>('http://localhost:6700/api/Settlements/' + id).toPromise();
   }
   async deleteFriend(removeList: User[]): Promise<any> {
-    const httpParams = new HttpParams().set('aaa', '111');
-    httpParams.set('userId', removeList[0].id.toString());
-    httpParams.set('friendId', removeList[1].id.toString());
-    const options = { params: httpParams };
-    return await this.http.delete<any>('http://localhost:6700/api/UserFriendMappings', options).toPromise();
+    // tslint:disable-next-line: max-line-length
+    return await this.http.delete<any>('http://localhost:6700/api/UserFriendMappings/delete?user1=' + removeList[0].id + '&user2=' + removeList[1].id).toPromise();
   }
   async clearActivities(userId: number) {
     return await this.http.delete('http://localhost:6700/api/Activities/ByUserId/' + userId).toPromise();

@@ -129,7 +129,7 @@ export class FriendComponent implements OnInit {
     }
   }
   async addFriend(myform: NgForm) {
-    console.log("add Friend");
+    console.log('add Friend');
     const x = await this.dataService.addFriend(this.email, this.userId).then(
       k => {
         console.log(k);
