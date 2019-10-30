@@ -20,13 +20,15 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
   async login(email: string, password: string): Promise<User> {
-    const user1 = new User();
-    user1.email = email;
-    user1.password = password;
-    const x = await this.http.post<User>('http://localhost:6700/api/Users/authenticate', user1).toPromise();
-    console.log('AAA');
+    this.user = new User();
+    this.user.email = email;
+    this.user.password = password;
+    const x = await this.http.post<User>('http://localhost:6700/api/Users/authenticate', this.user).toPromise();
+    console.log('pro');
+    console.log(x);
     localStorage.setItem('currentUser', JSON.stringify(this.user));
     this.currentUserSubject.next(this.user);
+    const values = JSON.parse(localStorage.getItem('currentUser'));
     console.log('BBB');
     return x;
   }
