@@ -14,7 +14,7 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="text" class="form-control" name="email" id="email">
+            <input type="text" class="form-control" name="email" id="email" [(ngModel)]="email">
           </div>
         </div>
         <br>
@@ -25,7 +25,7 @@
             </label>
           </div>
           <div class="col-md-8">
-            <input type="password" class="form-control" name="password" id="password">
+            <input type="password" class="form-control" name="password" id="password" [(ngModel)]="password">
           </div>
 
         </div>
@@ -50,7 +50,7 @@
             </label>
           </div>
           <div class="col-md-6">
-            <input type="text" class="form-control" name="name" id="name">
+            <input type="text" class="form-control" name="name" id="name" [(ngModel)]="user.name" required>
           </div>
         </div>
         <br>
@@ -61,7 +61,7 @@
             </label>
           </div>
           <div class="col-md-6">
-            <input type="text" class="form-control" name="email" id="reg-email">
+            <input type="text" class="form-control" name="email" id="reg-email" [(ngModel)]="user.email" required>
           </div>
         </div>
         <br>
@@ -72,7 +72,7 @@
             </label>
           </div>
           <div class="col-md-6">
-            <input type="password" class="form-control" name="password" id="reg-password">
+            <input type="password" class="form-control" name="password" id="reg-password" [(ngModel)]="user.password" required>
           </div>
         </div>
         <br>
@@ -83,7 +83,7 @@
             </label>
           </div>
           <div class="col-md-6">
-            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
+            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" [(ngModel)]="confirmPassword" required>
           </div>
         </div>
         <br>
@@ -99,3 +99,10 @@
     </div>
   </div>
 </div>
+
+<span *ngIf="error" class="alert alert-danger" role="alert">
+  {{msg}}
+</span>
+<span *ngIf="newUserCreated" class="alert alert-primary" role="alert">
+  new user created.
+</span>

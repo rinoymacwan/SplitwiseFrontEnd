@@ -19,9 +19,11 @@ export class AppComponent implements OnInit {
   public groups: Group[];
   login: boolean;
   msg: string;
+  currentUser: User;
   // tslint:disable-next-line: max-line-length
   constructor(private authenticationService: AuthenticationService, private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     this.login = true;
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
     // const user = JSON.parse(localStorage.getItem('currentUser'));
     // if (user === null) {
     //   this.login = false;
@@ -58,18 +60,15 @@ export class AppComponent implements OnInit {
       }
     );
   }
-  onLogin(form: NgForm) {
-    console.log('login');
-    const x = this.authenticationService.login('rinoy@promactinfo.com', 'tvsgold').then(
-      k => {
-        console.log(k);
-        console.log('xxxxxx');
-        console.log(this.authenticationService.currentUserValue);
-        this.router.navigate([''], { state: { msg: 'login successfull.' } });
-      }
-    );
-  }
-  onRegister(form: NgForm) {
-    console.log('register');
+  // onLogin(form: NgForm) {
+  //   console.log('login');
+  // }
+  // onRegister(form: NgForm) {
+  //   console.log('register');
+  // }
+  logout() {
+    console.log('logout');
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
   }
 }

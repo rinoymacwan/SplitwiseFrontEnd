@@ -1,52 +1,44 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { User } from './models/user';
-import { LoginComponent } from './login/login.component';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
-  user: User;
-  constructor(private http: HttpClient) {
-    localStorage.clear();
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
-  }
-  public get currentUserValue(): User {
-    return this.currentUserSubject.value;
-  }
-  async login(email: string, password: string): Promise<User> {
-    this.user = new User();
-    this.user.email = email;
-    this.user.password = password;
-    const x = await this.http.post<User>('http://localhost:6700/api/Users/authenticate', this.user).toPromise();
-    console.log('pro');
-    console.log(x);
-    localStorage.setItem('currentUser', JSON.stringify(this.user));
-    this.currentUserSubject.next(this.user);
-    const values = JSON.parse(localStorage.getItem('currentUser'));
-    console.log('BBB');
-    return x;
-  }
-  logout() {
-    // remove user from local storage to log user out
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-}
-}
+    private currentUserSubject: BehaviorSubject<User>;
+    public currentUser: Observable<User>;
+    public user: User;
+    constructor(private http: HttpClient) {
+        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUser = this.currentUserSubject.asObservable();
+    }
 
-// k => {
-//   this.user = k;
-//   if (this.user.email !== null) {
-//     console.log(this.user);
-//     localStorage.setItem('currentUser', JSON.stringify(this.user));
-//     this.currentUserSubject.next(this.user);
-//     return x;
-//   } else {
-//     console.log('invalid user');
-//     return x;
-//   }
+    public get currentUserValue(): User {
+        return this.currentUserSubject.value;
+    }
+
+    login(username: string, password: string) {
+        this.user = new User();
+        this.user.email = username;
+        this.user.password = password;
+        return this.http.post<any>('http://localhost:6700/api/users/authenticate', this.user)
+            .pipe(map(user => {
+                // login successful if there's a jwt token in the response
+                // add token
+                if (user.email !== null) {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    this.currentUserSubject.next(user);
+                }
+
+                return user;
+            }));
+    }
+
+    logout() {
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
+        this.currentUserSubject.next(null);
+    }
+}

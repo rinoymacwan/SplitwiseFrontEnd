@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
+import { User } from '../models/user';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-login',
@@ -10,22 +13,56 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  email: string;
+  password: string;
+  returnUrl: string;
+  error: boolean;
+  user: User;
+  noMatchError: boolean;
+  confirmPassword: string;
+  msg: string;
+  newUserCreated: boolean;
   // tslint:disable-next-line: max-line-length
-  constructor(private authenticationService: AuthenticationService, private router: Router) { }
+  constructor(private authenticationService: AuthenticationService, private router: Router, private route: ActivatedRoute, private dataService: DataService) {
+    this.error = false;
+    this.newUserCreated = false;
+    if (this.authenticationService.currentUserValue) {
+      this.router.navigate(['/']);
+  }
+  }
 
   ngOnInit() {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.user = new User();
+    this.msg = '';
   }
   onLogin(form: NgForm) {
     console.log('login');
-    const x = this.authenticationService.login('rinoy@promactinfo.com', 'tvsgold').then(
-      k => {
-        console.log(k);
-        this.router.navigate([{ outlets: { master: ['home'] } }]);
-      }
-    );
+    this.authenticationService.login(this.email, this.password).pipe(first())
+    .subscribe(
+        data => {
+            this.router.navigate([this.returnUrl]);
+        },
+        error => {
+            console.log("ERROR!")
+            this.msg = 'could not find your account. please try again.';
+            this.error = true;
+        });
   }
   onRegister(form: NgForm) {
     console.log('register');
-  }
+    if (this.user.password === this.confirmPassword) {
+      console.log('match');
+      this.dataService.addUser(this.user).then(
+        k => {
+          this.newUserCreated = true;
+        }
+      );
 
+
+    } else {
+      this.msg = 'passwords do not match.';
+      this.error = true;
+    }
+  }
 }

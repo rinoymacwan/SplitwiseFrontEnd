@@ -21,6 +21,7 @@ import { AddEditExpensesResolver } from './resolvers/add-edit-expenses-resolver.
 import { SettleUpComponent } from './settle-up/settle-up.component';
 import { SettleUpResolver } from './resolvers/settle-up-resolver.service';
 import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './guards/auth.guard';
 
 
 const routes: Routes = [
@@ -42,7 +43,8 @@ const routes: Routes = [
   { path: 'expenses/:id', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver} },
   { path: 'settleup', component: SettleUpComponent, resolve: {resolvedData: SettleUpResolver} },
   { path: 'login', component: LoginComponent },
-  { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver} },
+  { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver}, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

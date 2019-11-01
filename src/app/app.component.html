@@ -1,10 +1,12 @@
-<div *ngIf="login === true" class="base">
+<div *ngIf="currentUser" class="base">
   <div class="container-fluid">
     <nav id="sideNav" class="col-lg-3">
+
       <br>
       <br>
       <br>
       <ul>
+          <li><button type="button" class="btn btn-primary" (click)="logout()">LogOut</button></li>
         <a [routerLink]="['/dashboard']">
           <li>Dashboard</li>
         </a>
@@ -38,14 +40,14 @@
     </nav>
   </div>
   <br>
-
+  </div>
   <div id="mainContent" class="col-lg-9">
     <router-outlet></router-outlet>
   </div>
 
-</div>
 
-<div *ngIf="login === false" class="login">
+
+<!-- <div *ngIf="login === false" class="login">
   <br>
   <br>
   <br>
@@ -148,4 +150,4 @@
     </div>
   </div>
 
-</div>
+</div> -->

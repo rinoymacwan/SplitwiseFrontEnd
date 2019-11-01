@@ -128,5 +128,8 @@ export class DataService {
     x.email = email;
     return await this.http.post<boolean>('http://localhost:6700/api/UserFriendMappings/ByEmail/' + userId, x).toPromise();
   }
+  async addUser(user: User): Promise<User> {
+    return await this.http.post<User>('http://localhost:6700/api/Users', user).toPromise();
+  }
 }
 
