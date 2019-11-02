@@ -3,22 +3,23 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataService } from '../data.service';
+import { User } from '../models/user';
 @Injectable({
   providedIn: 'root'
 })
 export class AddEditExpensesResolver implements Resolve<any> {
 
-  userId: number;
+  currentUser: User;
   constructor(private dataService: DataService) {
-    this.userId = 1;
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
    }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if(route.params['id'] > 0)
     {
       const join = forkJoin([
-        this.dataService.getFriends(this.userId),
-        this.dataService.getGroupsByUserId(this.userId),
+        this.dataService.getFriends(this.currentUser.id),
+        this.dataService.getGroupsByUserId(this.currentUser.id),
         this.dataService.getCategories(),
         this.dataService.getUser(1),
         this.dataService.getExpense(route.params['id']),
@@ -38,8 +39,8 @@ export class AddEditExpensesResolver implements Resolve<any> {
       return join;
     } else {
       const join = forkJoin([
-        this.dataService.getFriends(this.userId),
-        this.dataService.getGroupsByUserId(this.userId),
+        this.dataService.getFriends(this.currentUser.id),
+        this.dataService.getGroupsByUserId(this.currentUser.id),
         this.dataService.getCategories(),
         this.dataService.getUser(1),
         this.dataService.getPayers(),

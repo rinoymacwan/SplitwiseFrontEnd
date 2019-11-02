@@ -3,15 +3,18 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { DataService } from '../data.service';
 import { Group } from '../models/group';
 import { Observable } from 'rxjs';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GroupsResolver implements Resolve<Group[]>{
-
-  constructor(private dataSerive: DataService) { }
+  currentUser: User;
+  constructor(private dataSerive: DataService) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+   }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Group[]> {
-    const x = this.dataSerive.getGroupsByUserId(1);
+    const x = this.dataSerive.getGroupsByUserId(this.currentUser.id);
     return x;
    }
 }

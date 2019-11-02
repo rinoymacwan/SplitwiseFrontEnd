@@ -7,6 +7,7 @@ import { Expense } from '../models/expense';
 import { Payer } from '../models/payer';
 import { Payee } from '../models/payee';
 import { Settlement } from '../models/settlement';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +17,9 @@ export class DashboardResolver implements Resolve<any> {
   payers: Payer[];
   payees: Payee[];
   settlements: Settlement[];
-  userId: number;
+  currentUser: User;
   constructor(private dataService: DataService) {
-    this.userId = 1;
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
     // this.dataService.getExpenses().subscribe(exp => {
@@ -37,7 +38,7 @@ export class DashboardResolver implements Resolve<any> {
       this.dataService.getExpenses(),
       this.dataService.getPayers(),
       this.dataService.getPayees(),
-      this.dataService.getSettlementsByUserId(this.userId)
+      this.dataService.getSettlementsByUserId(this.currentUser.id)
     ]).pipe(map((results) => {
       return {
         expenses: results[0],

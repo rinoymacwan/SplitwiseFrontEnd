@@ -3,13 +3,17 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { DataService } from '../data.service';
 import { Payee } from '../models/payee';
 import { Observable } from 'rxjs';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PayeesResolver implements Resolve<Payee[]> {
-  constructor(private dataService: DataService) { }
+  currentUser: User;
+  constructor(private dataService: DataService) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Payee[]> {
-    return this.dataService.getPayeesByPayeeId(1);
+    return this.dataService.getPayeesByPayeeId(this.currentUser.id);
    }
 }

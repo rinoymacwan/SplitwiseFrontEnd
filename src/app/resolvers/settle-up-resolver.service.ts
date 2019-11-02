@@ -9,12 +9,14 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SettleUpResolver implements Resolve<any>{
-
-  constructor(private dataService: DataService) { }
+  currentUser: User;
+  constructor(private dataService: DataService) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     const join = forkJoin([
-      this.dataService.getFriends(1),
-      this.dataService.getUser(1)
+      this.dataService.getFriends(this.currentUser.id),
+      this.dataService.getUser(this.currentUser.id)
     ]).pipe(map((results) => {
       return {
         friends: results[0],

@@ -51,6 +51,7 @@ export class LoginComponent implements OnInit {
   }
   onRegister(form: NgForm) {
     console.log('register');
+    this.user.userName = this.user.email;
     if (this.user.password === this.confirmPassword) {
       console.log('match');
       this.dataService.addUser(this.user).then(

@@ -8,10 +8,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FriendsResolver implements Resolve<User[]>{
-
-  constructor(private dataService: DataService) { }
+  currentUser: User;
+  constructor(private dataService: DataService) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<User[]> {
-    const x = this.dataService.getFriends(1);
+    const x = this.dataService.getFriends(this.currentUser.id);
     return x;
    }
 }
