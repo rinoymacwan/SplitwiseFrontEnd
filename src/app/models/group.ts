@@ -3,6 +3,6 @@ import { User } from './user';
 export class Group {
   id: number;
   name: string;
-  madeById: number;
+  madeById: string;
   user: User;
 }

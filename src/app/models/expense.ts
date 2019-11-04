@@ -6,7 +6,7 @@ export class Expense {
   id: number;
   groupId: number;
   group: Group;
-  addedById: number;
+  addedById: string;
   user: User;
   dateTime: Date;
   categoryId: number;

@@ -34,6 +34,7 @@ export class GroupComponent implements OnInit {
   currentUser: User;
   constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
     const x = this.route.snapshot.data.resolvedData;
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.userId = 1;
     this.groupId = +this.route.snapshot.paramMap.get('id');
@@ -44,7 +45,7 @@ export class GroupComponent implements OnInit {
       this.payees = x.payees;
       this.group = x.group.group;
       this.members = x.group.members;
-      this.members = this.members.filter(k => k.id !== this.userId);
+      this.members = this.members.filter(k => k.id !== this.currentUser.id);
       this.currentUser = x.currentUser;
     } else {
       this.isNew = true;
@@ -58,7 +59,7 @@ export class GroupComponent implements OnInit {
     // console.log(JSON.stringify(this.group));
     // console.log(JSON.stringify(this.members));
     this.payments = [];
-    this.group.madeById = this.userId;
+    this.group.madeById = this.currentUser.id;
   }
 
   ngOnInit() {
@@ -68,11 +69,11 @@ export class GroupComponent implements OnInit {
       // console.log(JSON.stringify(this.payees));
       for (const expense of this.expenses) {
         this.payer = this.payers.find(k => k.expenseId === expense.id);
-        this.payee = this.payees.find(k => k.expenseId === expense.id && k.payeeId === this.userId);
+        this.payee = this.payees.find(k => k.expenseId === expense.id && k.payeeId === this.currentUser.id);
         // console.log(JSON.stringify(this.payee));
         if (this.payee === undefined) {
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, "You", 0, "", this.payer.amountPaid, this.payer.amountPaid, expense.dateTime));
+          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, "You", '0', "", this.payer.amountPaid, this.payer.amountPaid, expense.dateTime));
         } else {
           // tslint:disable-next-line: max-line-length
           this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, this.payer.user.name, this.payee.payeeId, "You", this.payer.amountPaid, this.payee.payeeShare, expense.dateTime));
@@ -80,9 +81,9 @@ export class GroupComponent implements OnInit {
       }
     }
   }
-  onSelect(checked: boolean, id: number) {
+  onSelect(checked: boolean, id: string) {
     if (checked === true) {
-      if (id === this.userId) {
+      if (id === this.currentUser.id) {
         this.members.push(this.currentUser);
       } else {
         this.members.push(this.friends.find(k => k.id === id));
@@ -114,7 +115,7 @@ export class GroupComponent implements OnInit {
   async onDelete() {
     if (confirm('Are you sure you want to delete this group and all its expenses?')) {
       // tslint:disable-next-line: max-line-length
-      this.dataService.addActivity(new Activity(this.userId, this.currentUser.name + ' deletd ' + this.group.name + ' group.', new Date(Date.now())));
+      this.dataService.addActivity(new Activity(this.currentUser.id, this.currentUser.name + ' deletd ' + this.group.name + ' group.', new Date(Date.now())));
       await this.dataService.deleteGroup(this.groupId);
       this.router.navigate(['groups'], { state: { msg: 'Group deleted.'}});
     }

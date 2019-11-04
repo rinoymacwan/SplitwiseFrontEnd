@@ -22,8 +22,7 @@ export class FriendComponent implements OnInit {
   payers: Payer[];
   payees: Payee[];
   settlements: Settlement[];
-  userId: number;
-  friendId: number;
+  friendId: string;
   friend: User;
   owesTab: string[];
   owedTab: string[];
@@ -41,10 +40,10 @@ export class FriendComponent implements OnInit {
   doesntExist: boolean;
   removeList: User[];
   constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
-    this.friendId = +this.route.snapshot.paramMap.get('id');
-    this.userId = 1;
+    this.friendId = this.route.snapshot.paramMap.get('id');
     this.email = '';
-    if (this.friendId === 0) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (this.friendId === '0') {
       this.isNew = true;
       this.doesntExist = false;
     } else {
@@ -56,7 +55,6 @@ export class FriendComponent implements OnInit {
       this.payees = x.payees;
       this.settlements = x.settlements;
       this.friend = x.friend;
-      this.currentUser = x.currentUser;
       this.settlements = this.settlements.filter(k => k.payeeId === this.friendId || k.payerId === this.friendId);
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       this.owedTab = [];
@@ -74,8 +72,8 @@ export class FriendComponent implements OnInit {
 
   ngOnInit() {
     if (this.isNew === false) {
-      const owesT = this.payees.filter(k => k.payeeId === this.userId);
-      const owedT = this.payers.filter(k => k.payerId === this.userId);
+      const owesT = this.payees.filter(k => k.payeeId === this.currentUser.id);
+      const owedT = this.payers.filter(k => k.payerId === this.currentUser.id);
 
       for (const owed of owedT) {
         const y = this.payees.filter(k => k.expenseId === owed.expenseId && k.payeeId === this.friendId);
@@ -84,7 +82,7 @@ export class FriendComponent implements OnInit {
           // tslint:disable-next-line: max-line-length
           this.AllOwedTab.push(this.expense.description + ' | You paid Rs. ' + owed.amountPaid + ' | You lent ' + x.user.name + ' Rs.' + x.payeeShare);
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(this.expense.id, this.expense.description, this.userId, 'You', this.friendId, x.user.name, owed.amountPaid, x.payeeShare, this.expense.dateTime));
+          this.payments.push(new Payment(this.expense.id, this.expense.description, this.currentUser.id, 'You', this.friendId, x.user.name, owed.amountPaid, x.payeeShare, this.expense.dateTime));
         }
       }
 
@@ -95,7 +93,7 @@ export class FriendComponent implements OnInit {
           // tslint:disable-next-line: max-line-length
           this.AllOwesTab.push(this.expense.description + ' | ' + x.user.name + ' paid ' + x.amountPaid + ' | ' + x.user.name + ' lent you ' + owes.payeeShare);
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(this.expense.id, this.expense.description, x.user.id, x.user.name, this.userId, 'You', x.amountPaid, owes.payeeShare, this.expense.dateTime));
+          this.payments.push(new Payment(this.expense.id, this.expense.description, x.user.id, x.user.name, this.currentUser.id, 'You', x.amountPaid, owes.payeeShare, this.expense.dateTime));
         }
       }
       this.payments.sort((a: Payment, b: Payment) => {
@@ -111,7 +109,7 @@ export class FriendComponent implements OnInit {
   async deleteSettlement(id: number) {
     if (confirm('Are you sure you want to delete this settlement?')) {
       // tslint:disable-next-line: max-line-length
-      this.dataService.addActivity(new Activity(this.userId, this.currentUser.name + ' deleted a settlement with ' + this.friend.name, new Date(Date.now())));
+      this.dataService.addActivity(new Activity(this.currentUser.id, this.currentUser.name + ' deleted a settlement with ' + this.friend.name, new Date(Date.now())));
       await this.dataService.deleteSettlement(id);
       // problem with routing
       this.router.navigate(['friend', this.friendId], { state: { msg: 'Settlement deleted.' } });
@@ -120,7 +118,7 @@ export class FriendComponent implements OnInit {
   async deleteFriend() {
     if (confirm('Are you sure you want to remove ' + this.friend.name + ' as a friend?')) {
       // tslint:disable-next-line: max-line-length
-      this.dataService.addActivity(new Activity(this.userId, 'You removed ' + this.friend.name + ' as a friend.', new Date(Date.now())));
+      this.dataService.addActivity(new Activity(this.currentUser.id, 'You removed ' + this.friend.name + ' as a friend.', new Date(Date.now())));
       this.removeList.push(this.currentUser);
       this.removeList.push(this.friend);
       await this.dataService.deleteFriend(this.removeList);
@@ -130,7 +128,7 @@ export class FriendComponent implements OnInit {
   }
   async addFriend(myform: NgForm) {
     console.log('add Friend');
-    const x = await this.dataService.addFriend(this.email, this.userId).then(
+    const x = await this.dataService.addFriend(this.email, this.currentUser.id).then(
       k => {
         console.log(k);
         if (k === true) {

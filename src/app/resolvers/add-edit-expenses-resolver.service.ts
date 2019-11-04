@@ -21,7 +21,7 @@ export class AddEditExpensesResolver implements Resolve<any> {
         this.dataService.getFriends(this.currentUser.id),
         this.dataService.getGroupsByUserId(this.currentUser.id),
         this.dataService.getCategories(),
-        this.dataService.getUser(1),
+        this.dataService.getUser(this.currentUser.id),
         this.dataService.getExpense(route.params['id']),
         this.dataService.getPayers(),
         this.dataService.getPayees(),
@@ -42,7 +42,7 @@ export class AddEditExpensesResolver implements Resolve<any> {
         this.dataService.getFriends(this.currentUser.id),
         this.dataService.getGroupsByUserId(this.currentUser.id),
         this.dataService.getCategories(),
-        this.dataService.getUser(1),
+        this.dataService.getUser(this.currentUser.id),
         this.dataService.getPayers(),
         this.dataService.getPayees(),
       ]).pipe(map((results) => {

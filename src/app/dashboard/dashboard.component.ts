@@ -7,6 +7,7 @@ import { Payee } from '../models/payee';
 import { Settlement } from '../models/settlement';
 import { Payment } from '../models/payment';
 import { find } from 'rxjs/operators';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,12 +15,11 @@ import { find } from 'rxjs/operators';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-
+  currentUser: User;
   expenses: Expense[];
   payers: Payer[];
   payees: Payee[];
   settlements: Settlement[];
-  userId: number;
   owesTab: string[];
   owedTab: string[];
   finalOwesTab: string[];
@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     // this.expenses = this.route.snapshot.data.resolvedData.expenses;
     const x = this.route.snapshot.data.resolvedData;
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     // tslint:disable-next-line: no-non-null-assertion
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       this.msg = this.router.getCurrentNavigation().extras.state.msg;
@@ -52,7 +53,9 @@ export class DashboardComponent implements OnInit {
     this.payers = x.payers;
     this.payees = x.payees;
     this.settlements = x.settlements;
-    this.userId = 1;
+    console.log(JSON.stringify(this.payers));
+    console.log(JSON.stringify(this.payees));
+    console.log(JSON.stringify(this.settlements));
     this.owedTab = [];
     this.owesTab = [];
     this.finalOwedTab = [];
@@ -72,7 +75,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    const owesT = this.payees.filter(k => k.payeeId === this.userId);
+    const owesT = this.payees.filter(k => k.payeeId === this.currentUser.id);
     for (const payee of owesT) {
       const payer = this.payers.find(k => k.expenseId === payee.expenseId && k.payerId);
       const expense = this.expenses.find(k => k.id === payee.expenseId);
@@ -85,7 +88,7 @@ export class DashboardComponent implements OnInit {
       }
     }
 
-    const owedT = this.payers.filter(k => k.payerId === this.userId);
+    const owedT = this.payers.filter(k => k.payerId === this.currentUser.id);
     for (const payer of owedT) {
       const payees = this.payees.filter(k => k.expenseId === payer.expenseId);
       for (const payee of payees) {
@@ -153,7 +156,7 @@ export class DashboardComponent implements OnInit {
     AllPayments = AllPayments.filter(k => k.amount !== 0);
     console.log(AllPayments);
     for (const x of AllPayments) {
-      if (x.from === this.userId) {
+      if (x.from === this.currentUser.id) {
         if (x.amount > 0) {
           this.finalOwedTab.push(x.toName + ' owes You Rs. ' + x.amount);
           this.totalOwed += x.amount;

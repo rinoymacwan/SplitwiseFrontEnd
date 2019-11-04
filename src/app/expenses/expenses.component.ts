@@ -27,7 +27,6 @@ export class ExpensesComponent implements OnInit {
   payee: Payee;
   payers: Payer[];
   payees: Payee[];
-  userId: number;
   categories: Category[];
   selectedFriend: User;
   expenseBetween: User[];
@@ -48,13 +47,13 @@ export class ExpensesComponent implements OnInit {
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     // common
     this.expense = new Expense();
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.flag = false;
     const x = this.route.snapshot.data.resolvedData;
     this.notes = false;
-    this.activity = new Activity(0, '', new Date(Date.now()));
+    this.activity = new Activity('0', '', new Date(Date.now()));
     this.isIndividual = true;
     const param = this.route.snapshot.paramMap.get('id');
-    this.userId = 1;
 
     // individual
     this.payer = new Payer();
@@ -68,7 +67,7 @@ export class ExpensesComponent implements OnInit {
     this.expenseBetween = this.friends;
     this.groups = x.groups;
     this.categories = x.categories;
-    this.currentUser = x.user;
+    // this.currentUser = x.user;
     this.paidBy = this.friends;
 
     this.selectedFriend = new User();
@@ -108,8 +107,8 @@ export class ExpensesComponent implements OnInit {
     if (this.expense.groupId !== undefined && this.expense.groupId > 0) {
       await this.dataService.getGroupMembers(this.expense.groupId).then(
         (k) => {
-          this.paidBy = k.members.filter(k => k.id !== this.userId);
-          this.expenseBetween = k.members.filter(k => k.id !== this.userId);
+          this.paidBy = k.members.filter(k => k.id !== this.currentUser.id);
+          this.expenseBetween = k.members.filter(k => k.id !== this.currentUser.id);
           this.isIndividual = false;
         }
       );
@@ -121,7 +120,7 @@ export class ExpensesComponent implements OnInit {
   }
   async onSubmit(form: NgForm) {
     console.log('form submit');
-    this.expense.addedById = this.userId;
+    this.expense.addedById = this.currentUser.id;
     await this.dataService.AddExpense(this.expense).then(
       k => {
         this.expense = k;
@@ -137,12 +136,12 @@ export class ExpensesComponent implements OnInit {
       this.payer.expenseId = this.expense.id;
       this.payee.expenseId = this.expense.id;
       this.payer.amountPaid = this.expense.total;
-      console.log('USERID: ' + this.userId);
+      console.log('USERID: ' + this.currentUser.id);
       console.log('PAYERID: ' + this.payer.payerId);
       console.log('PAYEEID: ' + this.payee.payeeId);
 
       // I Paid
-      if (+this.payer.payerId === +this.userId) {
+      if (+this.payer.payerId === +this.currentUser.id) {
         this.payer.payerShare = this.finalMyShare;
         this.payee.payeeId = this.selectedFriend.id;
         this.payee.payeeShare = this.finalSelectedFriendShare;
@@ -150,7 +149,7 @@ export class ExpensesComponent implements OnInit {
       } else {
         // Other Guy Paid
         this.payer.payerShare = this.finalSelectedFriendShare;
-        this.payee.payeeId = this.userId;
+        this.payee.payeeId = this.currentUser.id;
         this.payee.payeeShare = this.finalMyShare;
         console.log('Other guy paid');
       }
@@ -178,24 +177,24 @@ export class ExpensesComponent implements OnInit {
       this.activity.description = this.currentUser.name + ' added ' + this.expense.description + ' to ' + this.groups.find(k => k.id === this.expense.groupId).name + ' group. ';
 
     }
-    this.activity.userId = this.userId;
+    this.activity.userId = this.currentUser.id;
     this.activity.dateTime = this.expense.dateTime;
 
     this.dataService.addActivity(this.activity);
     this.router.navigate([''], { state: { msg: 'Expense added.' } });
   }
-  addUser(id: number) {
+  addUser(id: string) {
     console.log(id);
     this.flag = true;
-    this.selectedFriend = this.friends.find(k => k.id === +id);
+    this.selectedFriend = this.friends.find(k => k.id === id);
     console.log(JSON.stringify(this.selectedFriend));
     this.paidBy = [];
     this.paidBy.push(this.selectedFriend);
   }
-  onCheck(checked: boolean, id: number) {
+  onCheck(checked: boolean, id: string) {
     console.log(checked + '|' + id);
     if (checked === true) {
-      if (id === this.userId) {
+      if (id === this.currentUser.id) {
         this.selectedUsers.push(this.currentUser);
       } else {
         this.selectedUsers.push(this.friends.find(k => k.id === id));
@@ -206,10 +205,9 @@ export class ExpensesComponent implements OnInit {
       this.selectedUsers = this.selectedUsers.filter(k => k !== x);
     }
     this.onSplit();
-    // console.log(JSON.stringify(this.selectedUsers));
+     console.log(JSON.stringify(this.selectedUsers));
   }
   onIndividual() {
-
   }
   toggleNotes() {
     this.notes = !this.notes;

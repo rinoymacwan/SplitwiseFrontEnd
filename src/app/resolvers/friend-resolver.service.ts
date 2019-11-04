@@ -31,7 +31,7 @@ export class FriendResolver implements Resolve<any> {
         this.dataService.getPayees(),
         this.dataService.getSettlementsByUserId(this.currentUser.id),
         this.dataService.getUser(route.params['id']),
-        this.dataService.getUser(1)
+        this.dataService.getUser(this.currentUser.id)
       ]).pipe(map((results) => {
         return {
           expenses: results[0],

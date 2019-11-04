@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   // tslint:disable-next-line: max-line-length
   constructor(private authenticationService: AuthenticationService, private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     this.login = true;
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
     // const user = JSON.parse(localStorage.getItem('currentUser'));
     // if (user === null) {
@@ -49,12 +50,12 @@ export class AppComponent implements OnInit {
     );
   }
   fetchData() {
-    this.dataService.getFriends(1).subscribe(
+    this.dataService.getFriends(this.currentUser.id).subscribe(
       (frnds) => {
         this.friends = frnds;
       }
     );
-    this.dataService.getGroupsByUserId(1).subscribe(
+    this.dataService.getGroupsByUserId(this.currentUser.id).subscribe(
       (grps) => {
         this.groups = grps;
       }

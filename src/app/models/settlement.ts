@@ -7,9 +7,9 @@ export class Settlement {
   id: number;
   groupId: number;
   group: Group;
-  payerId: number;
+  payerId: string;
   payer: User;
-  payeeId: number;
+  payeeId: string;
   payee: User;
   dateTime: Date;
   amount: number;

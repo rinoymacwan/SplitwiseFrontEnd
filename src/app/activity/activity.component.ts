@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Activity } from '../models/activity';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-activity',
@@ -10,10 +11,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ActivityComponent implements OnInit {
   public activities: Activity[];
-  userId: number;
+  currentUser: User;
   constructor(private dataService: DataService, private route: ActivatedRoute) {
     this.activities = this.route.snapshot.data.resolvedData;
-    this.userId = 1;
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   ngOnInit() {
@@ -26,7 +27,7 @@ export class ActivityComponent implements OnInit {
   async onClear() {
     if (confirm('Are you sure you want to clear all activities?')) {
       this.activities = [];
-      await this.dataService.clearActivities(this.userId);
+      await this.dataService.clearActivities(this.currentUser.id);
     }
   }
 }

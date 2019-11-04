@@ -36,12 +36,12 @@ const routes: Routes = [
       resolvedPayees: PayeesResolver
     }
   },
-  { path: 'groups', component: GroupsComponent, resolve: {resolvedData: GroupsResolver} },
-  { path: 'group/:id', component: GroupComponent, resolve: {resolvedData: GroupResolver} },
-  { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver} },
-  { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: FriendResolver} },
-  { path: 'expenses/:id', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver} },
-  { path: 'settleup', component: SettleUpComponent, resolve: {resolvedData: SettleUpResolver} },
+  { path: 'groups', component: GroupsComponent, resolve: {resolvedData: GroupsResolver}, canActivate: [AuthGuard]  },
+  { path: 'group/:id', component: GroupComponent, resolve: {resolvedData: GroupResolver}, canActivate: [AuthGuard]  },
+  { path: 'friends', component: FriendsComponent, resolve: {resolvedData: FriendsResolver}, canActivate: [AuthGuard]  },
+  { path: 'friend/:id', component: FriendComponent, resolve: {resolvedData: FriendResolver}, canActivate: [AuthGuard]  },
+  { path: 'expenses/:id', component: ExpensesComponent, resolve: {resolvedData: AddEditExpensesResolver}, canActivate: [AuthGuard]  },
+  { path: 'settleup', component: SettleUpComponent, resolve: {resolvedData: SettleUpResolver}, canActivate: [AuthGuard]  },
   { path: 'login', component: LoginComponent },
   { path: '', component: DashboardComponent, resolve: {resolvedData: DashboardResolver}, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }

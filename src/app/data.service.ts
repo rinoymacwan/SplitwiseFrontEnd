@@ -18,7 +18,7 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  getActivities(UserId: number): Observable<Activity[]> {
+  getActivities(UserId: string): Observable<Activity[]> {
     const x = this.http.get<Activity[]>('http://localhost:6700/api/Activities/ByUserId/' + UserId);
     return x;
   }
@@ -26,7 +26,7 @@ export class DataService {
     const x = this.http.get<Expense[]>('http://localhost:6700/api/Expenses');
     return x;
   }
-  getPayersByPayerId(id: number): Observable<Payer[]> {
+  getPayersByPayerId(id: string): Observable<Payer[]> {
     const x = this.http.get<Payer[]>('http://localhost:6700/api/Payers/ByPayerId/' + id);
     return x;
   }
@@ -34,7 +34,7 @@ export class DataService {
     const x = this.http.get<Payer[]>('http://localhost:6700/api/Payers/ByExpenseId/' + id);
     return x;
   }
-  getPayeesByPayeeId(id: number): Observable<Payee[]> {
+  getPayeesByPayeeId(id: string): Observable<Payee[]> {
     const x = this.http.get<Payee[]>('http://localhost:6700/api/Payees/ByPayeeId/' + id);
     return x;
   }
@@ -50,17 +50,17 @@ export class DataService {
     const x = this.http.get<Payee[]>('http://localhost:6700/api/Payees');
     return x;
   }
-  getGroupsByUserId(id: number): Observable<Group[]> {
+  getGroupsByUserId(id: string): Observable<Group[]> {
     const x = this.http.get<Group[]>('http://localhost:6700/api/Groups/ByUserId/' + id);
     // console.log(JSON.stringify(x));
     return x;
   }
-  getFriends(id: number): Observable<User[]> {
+  getFriends(id: string): Observable<User[]> {
     const x = this.http.get<User[]>('http://localhost:6700/api/Users/' + id + '/friends');
     // console.log(JSON.stringify(x));
     return x;
   }
-  getSettlementsByUserId(id: number): Observable<Settlement[]> {
+  getSettlementsByUserId(id: string): Observable<Settlement[]> {
     const x = this.http.get<Settlement[]>('http://localhost:6700/api/Settlements/GetByUserId/' + id);
     // console.log(JSON.stringify(x));
     return x;
@@ -69,7 +69,7 @@ export class DataService {
     const x = this.http.get<any>('http://localhost:6700/api/Groups/' + id);
     return x;
   }
-  getUser(id: number): Observable<User> {
+  getUser(id: string): Observable<User> {
     const x = this.http.get<any>('http://localhost:6700/api/Users/' + id);
     return x;
   }
@@ -116,13 +116,13 @@ export class DataService {
     // tslint:disable-next-line: max-line-length
     return await this.http.delete<any>('http://localhost:6700/api/UserFriendMappings/delete?user1=' + removeList[0].id + '&user2=' + removeList[1].id).toPromise();
   }
-  async clearActivities(userId: number) {
+  async clearActivities(userId: string) {
     return await this.http.delete('http://localhost:6700/api/Activities/ByUserId/' + userId).toPromise();
   }
   async deleteGroup(id: number): Promise<Group> {
     return await this.http.delete<Group>('http://localhost:6700/api/Groups/' + id).toPromise();
   }
-  async addFriend(email: string, userId: number): Promise<boolean> {
+  async addFriend(email: string, userId: string): Promise<boolean> {
     // tslint:disable-next-line: max-line-length
     const x = new User();
     x.email = email;

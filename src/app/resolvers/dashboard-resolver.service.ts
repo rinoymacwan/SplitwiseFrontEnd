@@ -8,6 +8,7 @@ import { Payer } from '../models/payer';
 import { Payee } from '../models/payee';
 import { Settlement } from '../models/settlement';
 import { User } from '../models/user';
+import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,7 @@ export class DashboardResolver implements Resolve<any> {
       this.dataService.getPayees(),
       this.dataService.getSettlementsByUserId(this.currentUser.id)
     ]).pipe(map((results) => {
+      console.log(JSON.stringify(results[0]));
       return {
         expenses: results[0],
         payers: results[1],
