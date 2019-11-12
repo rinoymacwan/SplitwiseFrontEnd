@@ -59,6 +59,7 @@ export class ExpensesComponent implements OnInit {
     this.payer = new Payer();
     this.payee = new Payee();
 
+    this.payer.payerId = this.currentUser.id;
     // group
     this.payers = [];
     this.payees = [];
@@ -181,7 +182,10 @@ export class ExpensesComponent implements OnInit {
     this.activity.dateTime = this.expense.dateTime;
 
     this.dataService.addActivity(this.activity);
-    this.router.navigate([''], { state: { msg: 'Expense added.' } });
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['dashboard'], { state: { msg: 'Expense added.' } } );
+  });
+    // this.router.navigate(['dashboard'], { state: { msg: 'Expense added.' } });
   }
   addUser(id: string) {
     console.log(id);

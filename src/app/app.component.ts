@@ -25,22 +25,6 @@ export class AppComponent implements OnInit {
     this.login = true;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-    // const user = JSON.parse(localStorage.getItem('currentUser'));
-    // if (user === null) {
-    //   this.login = false;
-    // }
-    // console.log(user);
-    // if (this.router.getCurrentNavigation() !== null) {
-    //   const x = this.router.getCurrentNavigation().extras.state.msg;
-    //   if (x !== undefined && x === 'login successfull.') {
-    //     this.fetchData();
-    //     this.login = true;
-    //     this.msg = x;
-    //     console.log(this.msg);
-    //   }
-    // } else {
-    //
-    // }
   }
   ngOnInit(): void {
     this.router.events.subscribe(
