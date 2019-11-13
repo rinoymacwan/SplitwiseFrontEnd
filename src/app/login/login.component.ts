@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { User } from '../models/user';
 import { DataService } from '../data.service';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit {
   msg: string;
   newUserCreated: boolean;
   // tslint:disable-next-line: max-line-length
-  constructor(private authenticationService: AuthenticationService, private router: Router, private route: ActivatedRoute, private dataService: DataService) {
+  constructor(public myapp: AppComponent, private authenticationService: AuthenticationService, private router: Router, private route: ActivatedRoute, private dataService: DataService) {
     this.error = false;
     this.newUserCreated = false;
     if (this.authenticationService.currentUserValue) {
@@ -41,7 +42,8 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.email, this.password).pipe(first())
     .subscribe(
         data => {
-            this.router.navigate([this.returnUrl]);
+          this.myapp.fetchData();
+          this.router.navigate([this.returnUrl]);
         },
         error => {
             console.log("ERROR!")
