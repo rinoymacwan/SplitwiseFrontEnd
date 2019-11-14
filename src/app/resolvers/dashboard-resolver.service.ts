@@ -41,7 +41,7 @@ export class DashboardResolver implements Resolve<any> {
       this.dataService.getPayees(),
       this.dataService.getSettlementsByUserId(this.currentUser.id)
     ]).pipe(map((results) => {
-      console.log(JSON.stringify(results[0]));
+      //console.log(JSON.stringify(results[0]));
       return {
         expenses: results[0],
         payers: results[1],

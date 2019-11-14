@@ -83,6 +83,8 @@ export class FriendComponent implements OnInit {
           this.AllOwedTab.push(this.expense.description + ' | You paid Rs. ' + owed.amountPaid + ' | You lent ' + x.user.name + ' Rs.' + x.payeeShare);
           // tslint:disable-next-line: max-line-length
           this.payments.push(new Payment(this.expense.id, this.expense.description, this.currentUser.id, 'You', this.friendId, x.user.name, owed.amountPaid, x.payeeShare, this.expense.dateTime));
+          this.totalOwed += x.payeeShare;
+          console.log(x.payeeShare);
         }
       }
 
@@ -94,6 +96,8 @@ export class FriendComponent implements OnInit {
           this.AllOwesTab.push(this.expense.description + ' | ' + x.user.name + ' paid ' + x.amountPaid + ' | ' + x.user.name + ' lent you ' + owes.payeeShare);
           // tslint:disable-next-line: max-line-length
           this.payments.push(new Payment(this.expense.id, this.expense.description, x.user.id, x.user.name, this.currentUser.id, 'You', x.amountPaid, owes.payeeShare, this.expense.dateTime));
+          this.totalOwes += owes.payeeShare;
+          console.log(owes.payeeShare);
         }
       }
       this.payments.sort((a: Payment, b: Payment) => {
@@ -102,6 +106,15 @@ export class FriendComponent implements OnInit {
       });
     } else {
       console.log('new');
+    }
+    this.grandTotal = this.totalOwed - this.totalOwes;
+    for (const z of this.settlements) {
+
+      if (z.payerId === this.currentUser.id) {
+        this.grandTotal += z.amount;
+      } else {
+        this.grandTotal -= z.amount;
+      }
     }
 
   }

@@ -53,9 +53,9 @@ export class DashboardComponent implements OnInit {
     this.payers = x.payers;
     this.payees = x.payees;
     this.settlements = x.settlements;
-    console.log(JSON.stringify(this.payers));
-    console.log(JSON.stringify(this.payees));
-    console.log(JSON.stringify(this.settlements));
+    // console.log(JSON.stringify(this.payers));
+    // console.log(JSON.stringify(this.payees));
+    // console.log(JSON.stringify(this.settlements));
     this.owedTab = [];
     this.owesTab = [];
     this.finalOwedTab = [];
@@ -154,7 +154,7 @@ export class DashboardComponent implements OnInit {
       }
     }
     AllPayments = AllPayments.filter(k => k.amount !== 0);
-    console.log(AllPayments);
+    // console.log(AllPayments);
     for (const x of AllPayments) {
       if (x.from === this.currentUser.id) {
         if (x.amount > 0) {

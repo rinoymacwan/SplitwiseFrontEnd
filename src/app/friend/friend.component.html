@@ -52,6 +52,33 @@
 
 </div>
 <hr>
+
+<div class="row centre-col">
+  <div class="col-4">
+    <label>total balance</label>
+  </div>
+  <div class="col-4">
+    <label>you owe</label>
+  </div>
+  <div class="col-4">
+    <label>you are owed</label>
+  </div>
+</div>
+<div class="row centre-col">
+  <div class="col-4" [ngClass]="(grandTotal>0)?'owed':'owe'">
+
+    {{sign}}{{grandTotal}}
+  </div>
+  <div class="col-4 owe">
+
+    {{totalOwes}}
+  </div>
+  <div class="col-4 owed">
+
+    {{totalOwed}}
+  </div>
+</div>
+<hr>
 <b>Expenses</b>
 <br>
 <br>

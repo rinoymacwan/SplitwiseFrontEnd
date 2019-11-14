@@ -32,6 +32,10 @@ export class GroupComponent implements OnInit {
   isNew: boolean;
   friends: User[];
   currentUser: User;
+  totalOwes: number;
+  totalOwed: number;
+  grandTotal: number;
+  sign: string;
   constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
     const x = this.route.snapshot.data.resolvedData;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -47,6 +51,7 @@ export class GroupComponent implements OnInit {
       this.members = x.group.members;
       this.members = this.members.filter(k => k.id !== this.currentUser.id);
       this.currentUser = x.currentUser;
+      this.totalOwed = this.totalOwes = this.grandTotal = 0;
     } else {
       this.isNew = true;
       this.friends = x.friends;
@@ -55,7 +60,7 @@ export class GroupComponent implements OnInit {
       this.members.push(this.currentUser);
       this.group = new Group();
     }
-    console.log(this.isNew);
+    // console.log(this.isNew);
     // console.log(JSON.stringify(this.group));
     // console.log(JSON.stringify(this.members));
     this.payments = [];
@@ -115,7 +120,7 @@ export class GroupComponent implements OnInit {
   async onDelete() {
     if (confirm('Are you sure you want to delete this group and all its expenses?')) {
       // tslint:disable-next-line: max-line-length
-      this.dataService.addActivity(new Activity(this.currentUser.id, this.currentUser.name + ' deletd ' + this.group.name + ' group.', new Date(Date.now())));
+      this.dataService.addActivity(new Activity(this.currentUser.id, this.currentUser.name + ' deleted ' + this.group.name + ' group.', new Date(Date.now())));
       await this.dataService.deleteGroup(this.groupId);
       this.router.navigate(['groups'], { state: { msg: 'Group deleted.'}});
     }
