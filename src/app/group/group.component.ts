@@ -74,16 +74,20 @@ export class GroupComponent implements OnInit {
       // console.log(JSON.stringify(this.payees));
       for (const expense of this.expenses) {
         this.payer = this.payers.find(k => k.expenseId === expense.id);
-        this.payee = this.payees.find(k => k.expenseId === expense.id && k.payeeId === this.currentUser.id);
-        // console.log(JSON.stringify(this.payee));
-        if (this.payee === undefined) {
+
+        if (this.payer.payerId === this.currentUser.id) {
+          // I Paid
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, "You", '0', "", this.payer.amountPaid, this.payer.amountPaid, expense.dateTime));
+          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, "You", '0', "", this.payer.amountPaid, this.payer.amountPaid - this.payer.payerShare, expense.dateTime));
+          this.totalOwed += this.payer.amountPaid - this.payer.payerShare;
         } else {
+          this.payee = this.payees.find(k => k.payeeId === this.currentUser.id && expense.id === k.expenseId);
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, this.payer.user.name, this.payee.payeeId, "You", this.payer.amountPaid, this.payee.payeeShare, expense.dateTime));
+          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, this.payer.user.name, this.currentUser.id, "You", this.payer.amountPaid, this.payee.payeeShare, expense.dateTime));
+          this.totalOwes = this.payee.payeeShare;
         }
       }
+      this.grandTotal = this.totalOwed - this.totalOwes;
     }
   }
   onSelect(checked: boolean, id: string) {
