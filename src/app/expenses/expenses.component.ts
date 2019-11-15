@@ -93,7 +93,8 @@ export class ExpensesComponent implements OnInit {
       this.payer = this.payers.find(k => this.expense.id === k.expenseId);
       this.payees = this.payees.filter(k => k.expenseId === this.expense.id);
       const temp = this.friends.find(k => k.id === this.expense.addedById);
-      if (temp === undefined) {
+      // console.log(temp.email);
+      if (this.expense.addedById === this.currentUser.id) {
         this.addedByName = 'You';
       } else {
         this.addedByName = temp.name;

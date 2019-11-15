@@ -13,7 +13,7 @@ export class FriendsComponent implements OnInit {
   public friends: User[];
   constructor(private dataService: DataService, private route: ActivatedRoute) {
     this.friends = this.route.snapshot.data.resolvedData;
-    console.log(JSON.stringify(this.friends));
+    // console.log(JSON.stringify(this.friends));
    }
   ngOnInit() {
   }
