@@ -18,6 +18,7 @@ export class SettleUpResolver implements Resolve<any>{
       this.dataService.getFriends(this.currentUser.id),
       this.dataService.getUser(this.currentUser.id)
     ]).pipe(map((results) => {
+      console.log(results[0]);
       return {
         friends: results[0],
         user: results[1],
