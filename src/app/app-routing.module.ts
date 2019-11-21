@@ -1,27 +1,27 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ActivityComponent } from './activity/activity.component';
-import { AllExpensesComponent } from './all-expenses/all-expenses.component';
-import { GroupsComponent } from './groups/groups.component';
-import { FriendsComponent } from './friends/friends.component';
-import { ExpensesComponent } from './expenses/expenses.component';
-import { ActivitiesResolver } from './resolvers/activities-resolver.service';
-import { ExpensesResolver } from './resolvers/expenses-resolver.service';
-import { PayersResolver } from './resolvers/payers-resolver.service';
-import { PayeesResolver } from './resolvers/payees-resolver.service';
-import { GroupsResolver } from './resolvers/groups-resolver.service';
-import { FriendsResolver } from './resolvers/friends-resolver.service';
-import { DashboardResolver } from './resolvers/dashboard-resolver.service';
-import { FriendComponent } from './friend/friend.component';
-import { GroupComponent } from './group/group.component';
-import { GroupResolver } from './resolvers/group-resolver.service';
-import { FriendResolver } from './resolvers/friend-resolver.service';
-import { AddEditExpensesResolver } from './resolvers/add-edit-expenses-resolver.service';
-import { SettleUpComponent } from './settle-up/settle-up.component';
-import { SettleUpResolver } from './resolvers/settle-up-resolver.service';
-import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './guards/auth.guard';
+import { DashboardComponent } from './user/dashboard/dashboard.component';
+import { ActivityComponent } from './user/activity/activity.component';
+import { AllExpensesComponent } from './transactions/all-expenses/all-expenses.component';
+import { GroupsComponent } from './user/groups/groups.component';
+import { FriendsComponent } from './user/friends/friends.component';
+import { ExpensesComponent } from './transactions/expenses/expenses.component';
+import { ActivitiesResolver } from './shared/resolvers/activities-resolver.service';
+import { ExpensesResolver } from './shared/resolvers/expenses-resolver.service';
+import { PayersResolver } from './shared/resolvers/payers-resolver.service';
+import { PayeesResolver } from './shared/resolvers/payees-resolver.service';
+import { GroupsResolver } from './shared/resolvers/groups-resolver.service';
+import { FriendsResolver } from './shared/resolvers/friends-resolver.service';
+import { DashboardResolver } from './shared/resolvers/dashboard-resolver.service';
+import { FriendComponent } from './user/friend/friend.component';
+import { GroupComponent } from './user/group/group.component';
+import { GroupResolver } from './shared/resolvers/group-resolver.service';
+import { FriendResolver } from './shared/resolvers/friend-resolver.service';
+import { AddEditExpensesResolver } from './shared/resolvers/add-edit-expenses-resolver.service';
+import { SettleUpComponent } from './transactions/settle-up/settle-up.component';
+import { SettleUpResolver } from './shared/resolvers/settle-up-resolver.service';
+import { LoginComponent } from './login/login/login.component';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 
 const routes: Routes = [
@@ -54,36 +54,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-
-// const routes: Routes = [
-//   // tslint:disable-next-line: max-line-length
-
-//   { path: 'login', component: LoginComponent, outlet: 'master' },
-//   {
-//     path: 'home', component: HomeComponent, outlet: 'master',
-//     children: [
-//       // tslint:disable-next-line: max-line-length
-//       { path: 'dashboard', component: DashboardComponent, outlet: 'sub', resolve: { resolvedData: DashboardResolver }, runGuardsAndResolvers: 'always' },
-//       { path: 'activity', component: ActivityComponent, outlet: 'sub', resolve: { resolvedData: ActivitiesResolver } },
-//       {
-//         path: 'allexpenses',
-//         component: AllExpensesComponent,
-//         outlet: 'sub',
-//         resolve: {
-//           resolvedExpenses: ExpensesResolver,
-//           resolvedPayers: PayersResolver,
-//           resolvedPayees: PayeesResolver
-//         }
-//       },
-//       { path: 'groups', component: GroupsComponent, outlet: 'sub', resolve: { resolvedData: GroupsResolver } },
-//       { path: 'group/:id', component: GroupComponent, outlet: 'sub', resolve: { resolvedData: GroupResolver } },
-//       { path: 'friends', component: FriendsComponent, outlet: 'sub', resolve: { resolvedData: FriendsResolver } },
-//       { path: 'friend/:id', component: FriendComponent, outlet: 'sub', resolve: { resolvedData: FriendResolver } },
-//       { path: 'expenses/:id', component: ExpensesComponent, outlet: 'sub', resolve: { resolvedData: AddEditExpensesResolver } },
-//       { path: 'settleup', component: SettleUpComponent, outlet: 'sub', resolve: { resolvedData: SettleUpResolver } },
-//       // tslint:disable-next-line: max-line-length
-//       { path: '', component: DashboardComponent, outlet: 'sub', resolve: { resolvedData: DashboardResolver }, runGuardsAndResolvers: 'always' },
-//     ]
-//   },
-//   { path: '', component: LoginComponent, outlet: 'master', }
-// ];

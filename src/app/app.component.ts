@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from './models/user';
-import { DataService } from './data.service';
+import { User } from './shared/models/user';
+import { DataService } from './shared/services/data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {MatIconRegistry} from '@angular/material/icon';
-import { Group } from './models/group';
+import { Group } from './shared/models/group';
 import { NgForm } from '@angular/forms';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from './shared/services/authentication.service';
 
 @Component({
   selector: 'app-root',

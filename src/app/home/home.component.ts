@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../models/user';
-import { Group } from '../models/group';
-import { DataService } from '../data.service';
+import { User } from '../shared/models/user';
+import { Group } from '../shared/models/group';
+import { DataService } from '../shared/services/data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
