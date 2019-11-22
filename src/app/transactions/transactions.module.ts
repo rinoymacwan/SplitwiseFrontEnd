@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AllExpensesComponent } from './all-expenses/all-expenses.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { SettleUpComponent } from './settle-up/settle-up.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -13,7 +14,7 @@ import { SettleUpComponent } from './settle-up/settle-up.component';
     SettleUpComponent,
   ],
   imports: [
-    CommonModule
+    SharedModule
   ]
 })
 export class TransactionsModule { }
