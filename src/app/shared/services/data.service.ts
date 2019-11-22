@@ -84,7 +84,7 @@ export class DataService {
     // console.log(JSON.stringify(x));
     return x;
   }
-  async AddExpense(expense: Expense): Promise<Expense>{
+  async AddExpense(expense: Expense): Promise<Expense> {
     return await this.http.post<Expense>(this.baseURl + 'Expenses', expense).toPromise();
   }
   async AddPayer(payer: Payer) {
@@ -105,7 +105,7 @@ export class DataService {
   async addGroupMemberMapping(groupMemberMapping: GroupMemberMapping) {
     await this.http.post(this.baseURl + 'GroupMemberMappings', groupMemberMapping).toPromise();
   }
-  getExpense(id: number): Observable<Expense>{
+  getExpense(id: number): Observable<Expense> {
     return this.http.get<Expense>(this.baseURl + 'Expenses/' + id);
   }
   async deleteExpense(expense: Expense): Promise<Expense> {

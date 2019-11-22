@@ -8,7 +8,7 @@ import { User } from '../models/user';
 @Injectable({
   providedIn: 'root'
 })
-export class ActivitiesResolver implements Resolve<Activity[]>{
+export class ActivitiesResolver implements Resolve<Activity[]> {
   currentUser: User;
   constructor(private dataSerive: DataService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
