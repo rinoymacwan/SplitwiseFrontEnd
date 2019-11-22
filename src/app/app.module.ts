@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { MatIconRegistry, MatIconModule } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeComponent } from './home/home.component';
 import { JwtInterceptor } from './shared/interceptors/jwt-interceptor';
 import { LoginModule } from './login/login.module';
 import { TransactionsModule } from './transactions/transactions.module';
@@ -17,8 +16,7 @@ import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
