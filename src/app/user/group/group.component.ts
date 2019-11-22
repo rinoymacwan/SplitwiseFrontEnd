@@ -22,7 +22,6 @@ export class GroupComponent implements OnInit {
   group: Group;
   groupId: number;
   members: User[];
-  userId: number;
   expenses: Expense[];
   payers: Payer[];
   payees: Payee[];
@@ -40,7 +39,6 @@ export class GroupComponent implements OnInit {
     const x = this.route.snapshot.data.resolvedData;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.userId = 1;
     this.groupId = +this.route.snapshot.paramMap.get('id');
     if (this.groupId > 0) {
       this.isNew = false;
@@ -72,19 +70,24 @@ export class GroupComponent implements OnInit {
       this.expenses = this.expenses.filter(k => k.groupId === this.group.id);
       // console.log(JSON.stringify(this.expenses));
       // console.log(JSON.stringify(this.payees));
+      console.log(this.expenses);
       for (const expense of this.expenses) {
         this.payer = this.payers.find(k => k.expenseId === expense.id);
-
+        // why payees isn't here?
+        // what if Im not in this group expense
         if (this.payer.payerId === this.currentUser.id) {
           // I Paid
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, "You", '0', "", this.payer.amountPaid, this.payer.amountPaid - this.payer.payerShare, expense.dateTime));
+          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, 'You', '0', '', this.payer.amountPaid, this.payer.amountPaid - this.payer.payerShare, expense.dateTime));
           this.totalOwed += this.payer.amountPaid - this.payer.payerShare;
         } else {
           this.payee = this.payees.find(k => k.payeeId === this.currentUser.id && expense.id === k.expenseId);
+          if (this.payee === undefined) {
+            break;
+          }
           // tslint:disable-next-line: max-line-length
-          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, this.payer.user.name, this.currentUser.id, "You", this.payer.amountPaid, this.payee.payeeShare, expense.dateTime));
-          this.totalOwes = this.payee.payeeShare;
+          this.payments.push(new Payment(expense.id, expense.description, this.payer.payerId, this.payer.user.name, this.currentUser.id, 'You', this.payer.amountPaid, this.payee.payeeShare, expense.dateTime));
+          this.totalOwes += this.payee.payeeShare; // +=?
         }
       }
       this.grandTotal = this.totalOwed - this.totalOwes;
@@ -106,7 +109,7 @@ export class GroupComponent implements OnInit {
   }
 
   async onSubmit(form: NgForm) {
-    console.log("Adding new group!");
+    console.log('Adding new group!');
     console.log(this.group);
     await this.dataService.addGroup(this.group).then(
       k => {
