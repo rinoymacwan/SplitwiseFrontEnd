@@ -13,6 +13,7 @@ import { LoginModule } from './login/login.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { SharedModule } from './shared/shared.module';
     MatIconModule,
     LoginModule,
     TransactionsModule,
-    UserModule
+    UserModule,
+    ToastModule
   ],
   providers: [AppComponent,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
@@ -40,7 +42,7 @@ export class AppModule {
   /**
    *
    */
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer){
+  constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
     matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('/assets/people_alt-24px.svg'));
     matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('/assets/people-24px.svg'));
     matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('/assets/person-24px.svg'));
