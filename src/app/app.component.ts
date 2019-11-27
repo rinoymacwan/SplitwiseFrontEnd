@@ -8,6 +8,7 @@ import { NgForm } from '@angular/forms';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { MessageService } from 'primeng/api';
 import * as signalR from '@aspnet/signalr';
+import { SignalRService } from './shared/services/signal-r.service';
 
 
 @Component({
@@ -24,28 +25,37 @@ export class AppComponent implements OnInit {
   login: boolean;
   msg: string;
   currentUser: User;
+  connection: signalR.HubConnection;
+
   // tslint:disable-next-line: max-line-length
-  constructor(private messageService: MessageService, private authenticationService: AuthenticationService, private dataService: DataService, private route: ActivatedRoute, private router: Router) {
+  constructor(private signalRService: SignalRService, private messageService: MessageService, private authenticationService: AuthenticationService, private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     this.login = true;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-  }
+    this.signalRService.msgs.subscribe(
+      k => {
+        console.log(k);
+        this.messageService.add({ severity: 'success', summary: k, detail: 'Via SignalR' });
+  });
+}
   ngOnInit(): void {
 
-    const connection = new signalR.HubConnectionBuilder()
-      .configureLogging(signalR.LogLevel.Information)
-      .withUrl('http://localhost:6700/notify')
-      .build();
+    // this.connection = new signalR.HubConnectionBuilder()
+    //   .configureLogging(signalR.LogLevel.Information)
+    //   .withUrl('http://localhost:6700/notify')
+    //   .build();
 
-    connection.start().then(k =>  {
-      console.log('Connected!');
-    }).catch(err => {
-      return console.error(err.toString());
-    });
+    // this.connection.start().then(k =>  {
+    //   console.log('Connected!');
+    //   this.connection.invoke('AddUser', this.currentUser.id);
+    // }).catch(err => {
+    //   return console.error(err.toString());
+    // });
 
-    connection.on('BroadcastMessage', (type: string, payload: string) => {
-      this.messageService.add({ severity: type, summary: payload, detail: 'Via SignalR' });
-    });
+    // this.connection.on('SendMessage', (type: string, payload: string) => {
+    //   console.log('AAAAAAA');
+    //   this.messageService.add({ severity: type, summary: payload, detail: 'Via SignalR' });
+    // });
 
     this.router.events.subscribe(
       k => {
@@ -65,12 +75,10 @@ export class AppComponent implements OnInit {
       }
     );
   }
-  // onLogin(form: NgForm) {
-  //   console.log('login');
-  // }
-  // onRegister(form: NgForm) {
-  //   console.log('register');
-  // }
+  signal() {
+    this.signalRService.SendMessages('yo', ['dea18d66-c867-40c8-9a92-909ce738ceb1']);
+  }
+
   logout() {
     console.log('logout');
     this.authenticationService.logout();

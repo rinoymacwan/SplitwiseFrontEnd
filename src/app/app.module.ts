@@ -14,6 +14,7 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
 import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { ToastModule } from 'primeng/toast';
     UserModule,
     ToastModule
   ],
-  providers: [AppComponent,
+  providers: [AppComponent, MessageService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
