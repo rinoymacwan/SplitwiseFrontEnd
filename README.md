@@ -1,7 +1,7 @@
 # SplitwiseFrontEnd
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.1.
-Front End for a bill-splitting app like Splitwise using Angular 8. Includes Authentication and Authorization using JWT tokens.
+Front End for a bill-splitting app like Splitwise using Angular 8. Includes Authentication and Authorization using JWT tokens. Real Time Notifications using SignalR.
 
 ## Development server
 
