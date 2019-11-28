@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     this.signalRService.msgs.subscribe(
       k => {
         console.log(k);
-        this.messageService.add({ severity: 'success', summary: k, detail: 'Via SignalR' });
+        this.messageService.add({ severity: 'success', summary: k, detail: '' });
   });
 }
   ngOnInit(): void {
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
     //   console.log('AAAAAAA');
     //   this.messageService.add({ severity: type, summary: payload, detail: 'Via SignalR' });
     // });
-
+    this.signalRService.StartService();
     this.router.events.subscribe(
       k => {
         this.fetchData();
@@ -75,11 +75,12 @@ export class AppComponent implements OnInit {
       }
     );
   }
-  signal() {
-    this.signalRService.SendMessages('yo', ['dea18d66-c867-40c8-9a92-909ce738ceb1']);
-  }
+  // signal() {
+  //   this.signalRService.SendMessages('yo', ['dea18d66-c867-40c8-9a92-909ce738ceb1']);
+  // }
 
   logout() {
+    this.signalRService.StopService();
     console.log('logout');
     this.authenticationService.logout();
     this.router.navigate(['/login']);

@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 import { Category } from '../../shared/models/category';
 import { Payee } from '../../shared/models/payee';
 import { Activity } from '../../shared/models/activity';
+import { SignalRService } from 'src/app/shared/services/signal-r.service';
 
 @Component({
   selector: 'app-expenses',
@@ -44,7 +45,9 @@ export class ExpensesComponent implements OnInit {
   notes: boolean;
   activity: Activity;
   addedByName: string;
-  constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) {
+  listOfUsers: string[];
+  // tslint:disable-next-line: max-line-length
+  constructor(private signalRService: SignalRService, private dataService: DataService, private route: ActivatedRoute, private router: Router) {
     // common
     this.expense = new Expense();
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -54,7 +57,7 @@ export class ExpensesComponent implements OnInit {
     this.activity = new Activity('0', '', new Date(Date.now()));
     this.isIndividual = true;
     const param = this.route.snapshot.paramMap.get('id');
-
+    this.listOfUsers = [];
     // individual
     this.payer = new Payer();
     this.payee = new Payee();
@@ -83,7 +86,7 @@ export class ExpensesComponent implements OnInit {
 
 
     if (+param === 0) {
-      console.log('NEW EXPENSE');
+      // console.log('NEW EXPENSE');
       this.newExpense = true;
     } else {
       this.newExpense = false;
@@ -128,8 +131,8 @@ export class ExpensesComponent implements OnInit {
         this.expense = k;
       }
     );
-    console.log('expense:');
-    console.log(JSON.stringify(this.expense));
+    // console.log('expense:');
+    // console.log(JSON.stringify(this.expense));
 
     if (this.isIndividual === true) {
       // individual expenses
@@ -138,28 +141,37 @@ export class ExpensesComponent implements OnInit {
       this.payer.expenseId = this.expense.id;
       this.payee.expenseId = this.expense.id;
       this.payer.amountPaid = this.expense.total;
-      console.log('USERID: ' + this.currentUser.id);
-      console.log('PAYERID: ' + this.payer.payerId);
-      console.log('PAYEEID: ' + this.payee.payeeId);
+      // console.log('USERID: ' + this.currentUser.id);
+      // console.log('PAYERID: ' + this.payer.payerId);
+      // console.log('PAYEEID: ' + this.payee.payeeId);
 
       // I Paid
       if (+this.payer.payerId === +this.currentUser.id) {
         this.payer.payerShare = this.finalMyShare;
         this.payee.payeeId = this.selectedFriend.id;
         this.payee.payeeShare = this.finalSelectedFriendShare;
-        console.log('I paid');
+        // console.log('I paid');
+
+        const str = `${this.currentUser.name} added an expense '${this.expense.description}' with you.` ;
+        this.listOfUsers.push(this.selectedFriend.id);
+        this.signalRService.SendMessages(str, this.listOfUsers);
+
       } else {
         // Other Guy Paid
         this.payer.payerShare = this.finalSelectedFriendShare;
         this.payee.payeeId = this.currentUser.id;
         this.payee.payeeShare = this.finalMyShare;
-        console.log('Other guy paid');
+        // console.log('Other guy paid');
+
+        const str = `${this.currentUser.name} added an expense '${this.expense.description}' with you.` ;
+        this.listOfUsers.push(this.selectedFriend.id);
+        this.signalRService.SendMessages(str, this.listOfUsers);
       }
-      console.log('PAYER:');
-      console.log(JSON.stringify(this.payer));
+      // console.log('PAYER:');
+      // console.log(JSON.stringify(this.payer));
       this.dataService.AddPayer(this.payer);
-      console.log('PAYEE:');
-      console.log(JSON.stringify(this.payee));
+      // console.log('PAYEE:');
+      // console.log(JSON.stringify(this.payee));
       this.dataService.AddPayee(this.payee);
       // tslint:disable-next-line: max-line-length
       this.activity.description = this.currentUser.name + ' added ' + this.expense.description + ' with ' + this.selectedFriend.name;
@@ -178,11 +190,23 @@ export class ExpensesComponent implements OnInit {
       // tslint:disable-next-line: max-line-length
       this.activity.description = this.currentUser.name + ' added ' + this.expense.description + ' to ' + this.groups.find(k => k.id === this.expense.groupId).name + ' group. ';
 
-    }
+      const str = `${this.currentUser.name} added an expense '${this.expense.description}' with you.` ;
+
+      this.listOfUsers.push(this.payer.payerId);
+      this.selectedUsers.forEach(element => {
+        this.listOfUsers.push(element.id);
+      });
+      // tslint:disable-next-line: no-debugger
+      // debugger;
+      this.listOfUsers = this.listOfUsers.filter(k => k !== this.currentUser.id);
+      this.signalRService.SendMessages(str, this.listOfUsers);
+  }
     this.activity.userId = this.currentUser.id;
     this.activity.dateTime = this.expense.dateTime;
 
     this.dataService.addActivity(this.activity);
+    console.log(this.listOfUsers);
+
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['dashboard'], { state: { msg: 'Expense added.' } } );
   });
@@ -192,12 +216,12 @@ export class ExpensesComponent implements OnInit {
     console.log(id);
     this.flag = true;
     this.selectedFriend = this.friends.find(k => k.id === id);
-    console.log(JSON.stringify(this.selectedFriend));
+    // console.log(JSON.stringify(this.selectedFriend));
     this.paidBy = [];
     this.paidBy.push(this.selectedFriend);
   }
   onCheck(checked: boolean, id: string) {
-    console.log(checked + '|' + id);
+    // console.log(checked + '|' + id);
     if (checked === true) {
       if (id === this.currentUser.id) {
         this.selectedUsers.push(this.currentUser);
@@ -210,7 +234,7 @@ export class ExpensesComponent implements OnInit {
       this.selectedUsers = this.selectedUsers.filter(k => k !== x);
     }
     this.onSplit();
-     console.log(JSON.stringify(this.selectedUsers));
+    // console.log(JSON.stringify(this.selectedUsers));
   }
   onIndividual() {
   }
@@ -220,6 +244,13 @@ export class ExpensesComponent implements OnInit {
   async delete() {
     if (confirm('Are you sure you want to delete this expense?')) {
       await this.dataService.deleteExpense(this.expense);
+      const str = `${this.currentUser.name} deleted expense '${this.expense.description}'` ;
+      this.listOfUsers.push(this.payer.payerId);
+      this.payees.forEach(element => {
+        this.listOfUsers.push(element.payeeId);
+      });
+      this.listOfUsers = this.listOfUsers.filter(k => k !== this.currentUser.id);
+      this.signalRService.SendMessages(str, this.listOfUsers);
       this.router.navigate([''], { state: { msg: 'Expense deleted.' } });
     }
   }
@@ -238,7 +269,7 @@ export class ExpensesComponent implements OnInit {
         this.finalMyShare = this.myShare;
         this.finalSelectedFriendShare = this.selectedFriendShare;
       }
-      console.log(this.finalMyShare + '|' + this.finalSelectedFriendShare);
+      // console.log(this.finalMyShare + '|' + this.finalSelectedFriendShare);
     } else {
       if (this.expense.splitBy === 'equally') {
         this.equalShare = [];
@@ -246,18 +277,18 @@ export class ExpensesComponent implements OnInit {
         for (const x of this.selectedUsers) {
           this.equalShare[x.id] = this.expense.total / numberOfMembers;
         }
-        console.log(this.equalShare);
+        // console.log(this.equalShare);
       } else if (this.expense.splitBy === 'by percentage') {
         this.percentageShare = [];
         for (const x of this.selectedUsers) {
           this.percentageShare[x.id] = this.expense.total * (this.equalShare[x.id] / 100);
-          console.log(this.percentageShare);
+          // console.log(this.percentageShare);
         }
       } else if (this.expense.splitBy === 'unequally') {
       }
     }
   }
   onPaidByChange() {
-    console.log(this.payer.payerId);
+    // console.log(this.payer.payerId);
   }
 }

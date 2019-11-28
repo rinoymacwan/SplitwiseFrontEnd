@@ -124,11 +124,11 @@ export class DataService {
   async deleteGroup(id: number): Promise<Group> {
     return await this.http.delete<Group>(`${this.baseURl}Groups/${id}`).toPromise();
   }
-  async addFriend(email: string, userId: string): Promise<boolean> {
+  async addFriend(email: string, userId: string): Promise<User> {
     // tslint:disable-next-line: max-line-length
     const x = new User();
     x.email = email;
-    return await this.http.post<boolean>(`${this.baseURl}UserFriendMappings/ByEmail/${userId}`, x).toPromise();
+    return await this.http.post<User>(`${this.baseURl}UserFriendMappings/ByEmail/${userId}`, x).toPromise();
   }
   async addUser(user: User): Promise<User> {
     return await this.http.post<User>(`${this.baseURl}Users`, user).toPromise();

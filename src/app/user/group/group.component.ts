@@ -11,6 +11,7 @@ import { NgForm } from '@angular/forms';
 import { DataService } from '../../shared/services/data.service';
 import { GroupMemberMapping } from '../../shared/models/group-member-mapping';
 import { Activity } from '../../shared/models/activity';
+import { SignalRService } from 'src/app/shared/services/signal-r.service';
 
 @Component({
   selector: 'app-group',
@@ -35,11 +36,14 @@ export class GroupComponent implements OnInit {
   totalOwed: number;
   grandTotal: number;
   sign: string;
-  constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
+  listOfUsers: string[];
+  // tslint:disable-next-line: max-line-length
+  constructor(private signalRService: SignalRService, private route: ActivatedRoute, private router: Router, private dataService: DataService) {
     const x = this.route.snapshot.data.resolvedData;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.groupId = +this.route.snapshot.paramMap.get('id');
+    this.listOfUsers = [];
     if (this.groupId > 0) {
       this.isNew = false;
       this.expenses = x.expenses;
@@ -70,7 +74,7 @@ export class GroupComponent implements OnInit {
       this.expenses = this.expenses.filter(k => k.groupId === this.group.id);
       // console.log(JSON.stringify(this.expenses));
       // console.log(JSON.stringify(this.payees));
-      console.log(this.expenses);
+      // console.log(this.expenses);
       for (const expense of this.expenses) {
         this.payer = this.payers.find(k => k.expenseId === expense.id);
         // why payees isn't here?
@@ -120,8 +124,13 @@ export class GroupComponent implements OnInit {
     groupMemberMapping.groupId = this.group.id;
     for (const x of this.members) {
       groupMemberMapping.memberId = x.id;
+      this.listOfUsers.push(x.id);
       await this.dataService.addGroupMemberMapping(groupMemberMapping);
     }
+
+    const str = `${this.currentUser.name} added you in '${this.group.name}' group.` ;
+    this.listOfUsers = this.listOfUsers.filter(k => k !== this.currentUser.id);
+    this.signalRService.SendMessages(str, this.listOfUsers);
     this.router.navigate(['groups'], { state: { msg: 'Group added.'}});
   }
   async onDelete() {
@@ -129,6 +138,13 @@ export class GroupComponent implements OnInit {
       // tslint:disable-next-line: max-line-length
       this.dataService.addActivity(new Activity(this.currentUser.id, this.currentUser.name + ' deleted ' + this.group.name + ' group.', new Date(Date.now())));
       await this.dataService.deleteGroup(this.groupId);
+
+      this.members.forEach(element => {
+        this.listOfUsers.push(element.id);
+      });
+      const str = `${this.currentUser.name} deleted group '${this.group.name}'` ;
+      this.listOfUsers = this.listOfUsers.filter(k => k !== this.currentUser.id);
+      this.signalRService.SendMessages(str, this.listOfUsers);
       this.router.navigate(['groups'], { state: { msg: 'Group deleted.'}});
     }
   }

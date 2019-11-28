@@ -6,7 +6,6 @@ import { first } from 'rxjs/operators';
 import { User } from '../../shared/models/user';
 import { DataService } from '../../shared/services/data.service';
 import { AppComponent } from '../../app.component';
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -46,7 +45,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         error => {
-            console.log("ERROR!")
+            console.log('ERROR!');
             this.msg = 'could not find your account. please try again.';
             this.error = true;
         });

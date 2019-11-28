@@ -9,6 +9,7 @@ import { User } from '../../shared/models/user';
 import { DataService } from '../../shared/services/data.service';
 import { Activity } from '../../shared/models/activity';
 import { NgForm } from '@angular/forms';
+import { SignalRService } from 'src/app/shared/services/signal-r.service';
 
 @Component({
   selector: 'app-friend',
@@ -39,13 +40,18 @@ export class FriendComponent implements OnInit {
   email: string;
   doesntExist: boolean;
   removeList: User[];
-  constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService) {
+  listOfUsers: string[];
+  newFriend: User;
+  // tslint:disable-next-line: max-line-length
+  constructor(private signalRService: SignalRService, private route: ActivatedRoute, private router: Router, private dataService: DataService) {
     this.friendId = this.route.snapshot.paramMap.get('id');
     this.email = '';
+    this.listOfUsers = [];
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (this.friendId === '0') {
       this.isNew = true;
       this.doesntExist = false;
+      this.newFriend = new User();
     } else {
       this.isNew = false;
       this.removeList = [];
@@ -124,6 +130,10 @@ export class FriendComponent implements OnInit {
       // tslint:disable-next-line: max-line-length
       this.dataService.addActivity(new Activity(this.currentUser.id, this.currentUser.name + ' deleted a settlement with ' + this.friend.name, new Date(Date.now())));
       await this.dataService.deleteSettlement(id);
+
+      const str = `${this.currentUser.name} removed a settlement with you.` ;
+      this.listOfUsers.push(this.friend.id);
+      this.signalRService.SendMessages(str, this.listOfUsers);
       // problem with routing
       this.router.navigate(['friend', this.friendId], { state: { msg: 'Settlement deleted.' } });
     }
@@ -135,6 +145,11 @@ export class FriendComponent implements OnInit {
       this.removeList.push(this.currentUser);
       this.removeList.push(this.friend);
       await this.dataService.deleteFriend(this.removeList);
+
+      const str = `${this.currentUser.name} removed you as a friend` ;
+      this.listOfUsers.push(this.friend.id);
+      this.signalRService.SendMessages(str, this.listOfUsers);
+
       // problem with routing
       this.router.navigate(['friends'], { state: { msg: 'Friend removed.' } });
     }
@@ -143,9 +158,10 @@ export class FriendComponent implements OnInit {
     console.log('add Friend');
     const x = await this.dataService.addFriend(this.email, this.currentUser.id).then(
       k => {
-        // console.log(k);
-        if (k === true) {
+        console.log(k);
+        if (k.userName !== null) {
           this.doesntExist = false;
+          this.newFriend = k;
           this.router.navigate(['friends'], { state: { msg: 'friend added.' } });
 
         } else {
@@ -153,6 +169,9 @@ export class FriendComponent implements OnInit {
         }
       }
     );
+    const str = `${this.currentUser.name} added you as a friend` ;
+    this.listOfUsers.push(this.newFriend.id);
+    this.signalRService.SendMessages(str, this.listOfUsers);
   }
 
 }
